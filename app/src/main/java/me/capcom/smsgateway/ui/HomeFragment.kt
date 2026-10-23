@@ -28,6 +28,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import me.capcom.smsgateway.BuildConfig
 import me.capcom.smsgateway.R
 import me.capcom.smsgateway.databinding.FragmentHomeBinding
 import me.capcom.smsgateway.helpers.SettingsHelper
@@ -131,6 +132,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // PL-Med: karta serwera w chmurze tylko w smaku 'cloud'
+        binding.cardRemoteServer.isVisible = BuildConfig.CLOUD_ENABLED
 
         binding.textLocalIP.movementMethod = LinkMovementMethod.getInstance()
         binding.textPublicIP.movementMethod = LinkMovementMethod.getInstance()

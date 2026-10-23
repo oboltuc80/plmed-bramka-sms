@@ -65,14 +65,7 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".services.PushService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+        <!-- PL-Med: usluga FCM (.services.PushService) przeniesiona do src/cloud/AndroidManifest.xml -->
 
         <receiver
             android:name=".receivers.EventsReceiver"

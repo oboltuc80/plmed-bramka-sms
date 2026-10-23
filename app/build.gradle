@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.devtools.ksp'
-    id 'com.google.gms.google-services'
+    // upstream: id 'com.google.gms.google-services' -- PL-Med: plugin Firebase stosowany warunkowo na koncu pliku
 }
 
 ksp {
@@ -23,6 +23,20 @@ android {
         resourceConfigurations += ["en", "pl"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    // PL-Med: smaki buildu. 'local' = tylko serwer lokalny (bez chmury, FCM, webhookow w UI);
+    // 'cloud' = pelna funkcjonalnosc upstream (wymaga src/cloud/google-services.json).
+    flavorDimensions += ["edition"]
+    productFlavors {
+        local {
+            dimension "edition"
+            isDefault = true
+            buildConfigField "boolean", "CLOUD_ENABLED", "false"
+        }
+        cloud {
+            dimension "edition"
+            buildConfigField "boolean", "CLOUD_ENABLED", "true"
+        }
     }
     buildFeatures {
         viewBinding true
@@ -130,8 +144,9 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
 
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:31.1.1')
-    implementation 'com.google.firebase:firebase-messaging-ktx'
+    // upstream: implementation platform(...) / implementation 'firebase-messaging-ktx' -- PL-Med: tylko smak 'cloud'
+    cloudImplementation platform('com.google.firebase:firebase-bom:31.1.1')
+    cloudImplementation 'com.google.firebase:firebase-messaging-ktx'
 
     implementation 'com.googlecode.libphonenumber:libphonenumber:9.0.22'
 
@@ -143,4 +158,15 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+}
+
+// PL-Med: Firebase (google-services) tylko gdy istnieje konfiguracja smaku 'cloud';
+// zadania GoogleServices dla smaku 'local' sa wylaczone, bo nie ma dla niego google-services.json.
+if (file("src/cloud/google-services.json").exists()) {
+    apply plugin: 'com.google.gms.google-services'
+    tasks.whenTaskAdded { task ->
+        if (task.name.contains("GoogleServices") && task.name.contains("Local")) {
+            task.enabled = false
+        }
+    }
 }

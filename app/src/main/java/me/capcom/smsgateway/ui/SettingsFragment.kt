@@ -26,6 +26,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<Preference>("transient.app_version")?.summary =
             "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
 
+        // PL-Med: w smaku 'local' ukrywamy chmure, webhooki i ping (kod zostaje dla smaku 'cloud')
+        if (!BuildConfig.CLOUD_ENABLED) {
+            findPreference<Preference>("cloud_server")?.isVisible = false
+            findPreference<Preference>("webhooks")?.isVisible = false
+            findPreference<Preference>("ping")?.isVisible = false
+        }
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             findPreference<Preference>("system")?.isEnabled = false
             findPreference<Preference>("system.disable_battery_optimizations")?.summary =

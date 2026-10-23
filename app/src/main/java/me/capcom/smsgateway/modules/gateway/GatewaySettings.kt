@@ -1,5 +1,6 @@
 package me.capcom.smsgateway.modules.gateway
 
+import me.capcom.smsgateway.BuildConfig
 import me.capcom.smsgateway.modules.settings.Exporter
 import me.capcom.smsgateway.modules.settings.Importer
 import me.capcom.smsgateway.modules.settings.KeyValueStorage
@@ -14,7 +15,8 @@ class GatewaySettings(
     }
 
     var enabled: Boolean
-        get() = storage.get<Boolean>(ENABLED) ?: false
+        // PL-Med: w smaku 'local' tryb chmury jest zawsze wylaczony (upstream: storage.get<Boolean>(ENABLED) ?: false)
+        get() = BuildConfig.CLOUD_ENABLED && (storage.get<Boolean>(ENABLED) ?: false)
         set(value) = storage.set(ENABLED, value)
 
     val deviceId: String?
