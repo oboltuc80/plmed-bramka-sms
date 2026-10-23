@@ -68,7 +68,13 @@ jobs:
           exit 1
 
       - name: Testy jednostkowe
-        run: ./gradlew --no-daemon testLocalReleaseUnitTest
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon testLocalReleaseUnitTest 2>&1 | tee build.log || {
+            # bledy jako adnotacje GitHub (widoczne przez API, bez pobierania logow)
+            grep -E '^e: |error:|FAILED|What went wrong|Caused by' build.log | head -40 | sed 's/^/::error::/'
+            exit 1
+          }
 
       - name: Keystore
         if: steps.sign.outputs.enabled == 'true'
@@ -83,7 +89,11 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          ./gradlew --no-daemon assembleLocalRelease
+          set -o pipefail
+          ./gradlew --no-daemon assembleLocalRelease 2>&1 | tee build.log || {
+            grep -E '^e: |error:|FAILED|What went wrong|Caused by' build.log | head -40 | sed 's/^/::error::/'
+            exit 1
+          }
           mkdir -p out
           cp app/build/outputs/apk/local/release/app-local-release.apk \
              "out/${APP_FILE_NAME}-${{ steps.ver.outputs.name }}.apk"
@@ -91,7 +101,11 @@ jobs:
       - name: Build debug (kontrolny, bez podpisu release)
         if: steps.sign.outputs.enabled != 'true'
         run: |
-          ./gradlew --no-daemon assembleLocalDebug
+          set -o pipefail
+          ./gradlew --no-daemon assembleLocalDebug 2>&1 | tee build.log || {
+            grep -E '^e: |error:|FAILED|What went wrong|Caused by' build.log | head -40 | sed 's/^/::error::/'
+            exit 1
+          }
           mkdir -p out
           cp app/build/outputs/apk/local/debug/app-local-debug.apk \
              "out/${APP_FILE_NAME}-${{ steps.ver.outputs.name }}-debug.apk"
