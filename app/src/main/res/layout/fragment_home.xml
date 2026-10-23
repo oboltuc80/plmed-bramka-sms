@@ -237,6 +237,22 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- PL-Med: stan bramki (czerwony) zamiast logotypu, gdy cos jest nie tak -->
+            <TextView
+                android:id="@+id/textPlmedStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:lineSpacingExtra="6dp"
+                android:textColor="@color/red_800"
+                android:textSize="15sp"
+                android:visibility="gone"
+                tools:text="Telefon nie jest polaczony z Wi-Fi"
+                tools:visibility="visible" />
+
             <!-- PL-Med: logotyp pod kartami, widoczny gdy serwer lokalny jest wlaczony -->
             <ImageView
                 android:id="@+id/imageLogo"
@@ -248,6 +264,18 @@
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/plmed_logo"
                 android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- PL-Med: ostatnie polaczenie z PL-Med (szary, pod logotypem) -->
+            <TextView
+                android:id="@+id/textPlmedContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/grey_700"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:text="PL-Med laczyl sie 8 s temu"
                 tools:visibility="visible" />
 
         </LinearLayout>
@@ -265,12 +293,29 @@
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
+    <!-- PL-Med: przycisk 2x wyzszy (ergonomia), pod nim czas ostatniego wlaczenia/wylaczenia -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/grey_700"
+        android:minHeight="80dp"
         android:text="@string/button_start_service"
-        app:cornerRadius="8dp" />
+        android:textSize="20sp"
+        app:cornerRadius="12dp" />
+
+    <TextView
+        android:id="@+id/textServiceStateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textColor="@color/grey_700"
+        android:textSize="13sp"
+        tools:text="wlaczono dzis o 10:32 - wylaczono wczoraj o 21:05" />
 </androidx.appcompat.widget.LinearLayoutCompat>

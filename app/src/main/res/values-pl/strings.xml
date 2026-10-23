@@ -208,4 +208,26 @@
     <string name="filter_mms_count">MMS (%1$d)</string>
     <string name="device_key">Klucz urządzenia</string>
     <string name="device_keys_management">Zarządzanie kluczami urządzenia</string>
+
+    <!-- PL-Med: stan bramki pod kartą serwera lokalnego i GET /plmed/status -->
+    <string name="plmed_status_service_off">Usługa zatrzymana — naciśnij Uruchom</string>
+    <string name="plmed_status_no_wifi">Telefon nie jest połączony z Wi-Fi — bramka niedostępna dla PL-Med</string>
+    <string name="plmed_status_bad_ip">Adres lokalny %1$s jest nieprawidłowy — sprawdź Wi-Fi</string>
+    <string name="plmed_status_plmed_silent">PL-Med nie łączy się z telefonem od %1$s — sprawdź konfigurację bramki w PL-Med i sieć</string>
+    <string name="plmed_status_plmed_ok">PL-Med łączył się %1$s temu ✓</string>
+    <string name="plmed_status_airplane">Włączony tryb samolotowy</string>
+    <string name="plmed_status_no_sim">Brak karty SIM</string>
+    <string name="plmed_status_no_network">Brak zasięgu sieci komórkowej</string>
+    <string name="plmed_status_no_sms_permission">Brak uprawnienia do wysyłania SMS</string>
+    <string name="plmed_status_battery_optimization">Włączona optymalizacja baterii — system może zatrzymać bramkę</string>
+    <string name="plmed_status_battery_low">Bateria %1$d%% bez ładowania</string>
+    <string name="plmed_status_failed_sends">Nieudane wysyłki w ostatnich 24 h: %1$d (ostatnia %2$s)</string>
+    <string name="plmed_started_at">włączono %1$s</string>
+    <string name="plmed_stopped_at">wyłączono %1$s</string>
+    <string name="plmed_time_today">dziś o %1$s</string>
+    <string name="plmed_time_yesterday">wczoraj o %1$s</string>
+    <string name="plmed_time_date">%1$s o %2$s</string>
+    <string name="plmed_duration_seconds">%1$d s</string>
+    <string name="plmed_duration_minutes">%1$d min</string>
+    <string name="plmed_duration_hours">%1$d h</string>
 </resources>

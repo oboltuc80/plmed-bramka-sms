@@ -20,6 +20,9 @@ import me.capcom.smsgateway.modules.notifications.notificationsModule
 import me.capcom.smsgateway.modules.orchestrator.OrchestratorService
 import me.capcom.smsgateway.modules.orchestrator.orchestratorModule
 import me.capcom.smsgateway.modules.ping.pingModule
+import me.capcom.smsgateway.modules.plmed.PlmedStatusService
+import me.capcom.smsgateway.modules.plmed.plmedModule
+import me.capcom.smsgateway.modules.localserver.WebService
 import me.capcom.smsgateway.modules.receiver.receiverModule
 import me.capcom.smsgateway.modules.settings.settingsModule
 import me.capcom.smsgateway.modules.webhooks.webhooksModule
@@ -63,7 +66,13 @@ class App: Application() {
                 connectionModule,
                 orchestratorModule,
                 deviceModule,
+                plmedModule,
             )
+        }
+
+        // PL-Med: historia wlaczen/wylaczen serwera lokalnego (takze po autostarcie)
+        WebService.STATUS.observeForever { running ->
+            get<PlmedStatusService>().noteServiceState(running)
         }
 
         Thread.setDefaultUncaughtExceptionHandler(

@@ -219,4 +219,26 @@
     <string name="filter_mms_count">MMS (%1$d)</string>
     <string name="device_key">Device Key</string>
     <string name="device_keys_management">Device keys management</string>
+
+    <!-- PL-Med: stan bramki pod karta serwera lokalnego i GET /plmed/status -->
+    <string name="plmed_status_service_off">Service is stopped — tap Start</string>
+    <string name="plmed_status_no_wifi">Phone is not connected to Wi-Fi — gateway unreachable for PL-Med</string>
+    <string name="plmed_status_bad_ip">Local address %1$s is invalid — check Wi-Fi</string>
+    <string name="plmed_status_plmed_silent">No connections from PL-Med for %1$s — check gateway settings in PL-Med and the network</string>
+    <string name="plmed_status_plmed_ok">PL-Med connected %1$s ago ✓</string>
+    <string name="plmed_status_airplane">Airplane mode is on</string>
+    <string name="plmed_status_no_sim">No SIM card</string>
+    <string name="plmed_status_no_network">No mobile network</string>
+    <string name="plmed_status_no_sms_permission">SMS permission not granted</string>
+    <string name="plmed_status_battery_optimization">Battery optimization is on — the system may stop the gateway</string>
+    <string name="plmed_status_battery_low">Battery %1$d%% and not charging</string>
+    <string name="plmed_status_failed_sends">%1$d failed sends in the last 24 h (last %2$s)</string>
+    <string name="plmed_started_at">started %1$s</string>
+    <string name="plmed_stopped_at">stopped %1$s</string>
+    <string name="plmed_time_today">today at %1$s</string>
+    <string name="plmed_time_yesterday">yesterday at %1$s</string>
+    <string name="plmed_time_date">%1$s at %2$s</string>
+    <string name="plmed_duration_seconds">%1$d s</string>
+    <string name="plmed_duration_minutes">%1$d min</string>
+    <string name="plmed_duration_hours">%1$d h</string>
 </resources>

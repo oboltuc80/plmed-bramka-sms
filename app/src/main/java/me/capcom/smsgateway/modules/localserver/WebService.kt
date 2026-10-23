@@ -47,6 +47,8 @@ import me.capcom.smsgateway.modules.localserver.routes.LogsRoutes
 import me.capcom.smsgateway.modules.localserver.routes.MessagesRoutes
 import me.capcom.smsgateway.modules.localserver.routes.WebhooksRoutes
 import me.capcom.smsgateway.modules.notifications.NotificationsService
+import me.capcom.smsgateway.modules.plmed.PlmedStatusRoutes
+import me.capcom.smsgateway.modules.plmed.PlmedStatusService
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import kotlin.concurrent.thread
@@ -56,6 +58,7 @@ class WebService : Service() {
     private val settings: LocalServerSettings by inject()
     private val notificationsService: NotificationsService by inject()
     private val healthService: HealthService by inject()
+    private val plmedStatus: PlmedStatusService by inject()  // PL-Med: ostatnie polaczenie z PL-Med
     private val jwtService: JwtService by lazy { JwtService(get(), get(), get(), get()) }
 
     private val wakeLock: PowerManager.WakeLock by lazy {
@@ -82,9 +85,10 @@ class WebService : Service() {
                     validate { credentials ->
                         when {
                             credentials.name == username
-                                    && credentials.password == password -> UserIdPrincipal(
-                                credentials.name
-                            )
+                                    && credentials.password == password -> {
+                                plmedStatus.noteRequest()
+                                UserIdPrincipal(credentials.name)
+                            }
 
                             else -> null
                         }
@@ -99,6 +103,7 @@ class WebService : Service() {
                             return@validate null
                         }
 
+                        plmedStatus.noteRequest()
                         JWTPrincipal(credential.payload)
                     }
                 }
@@ -190,6 +195,10 @@ class WebService : Service() {
                     }
                     route("/auth") {
                         AuthRoutes(jwtService, get()).register(this)
+                    }
+                    // PL-Med: stan telefonu i bramki dla modulu PL-Med / HUB-a
+                    route("/plmed") {
+                        PlmedStatusRoutes(applicationContext, plmedStatus).register(this)
                     }
                 }
             }

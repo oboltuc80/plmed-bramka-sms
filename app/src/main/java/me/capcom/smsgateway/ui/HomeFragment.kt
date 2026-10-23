@@ -27,7 +27,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import me.capcom.smsgateway.modules.plmed.PlmedStatusService
 import me.capcom.smsgateway.BuildConfig
 import me.capcom.smsgateway.R
 import me.capcom.smsgateway.databinding.FragmentHomeBinding
@@ -57,6 +60,7 @@ class HomeFragment : Fragment() {
     private val events: EventBus by inject()
 
     private val localServerSvc: LocalServerService by inject()
+    private val plmedStatus: PlmedStatusService by inject()
     private val gatewaySvc: GatewayService by inject()
 
     private val orchestratorSvc: OrchestratorService by inject()
@@ -135,6 +139,14 @@ class HomeFragment : Fragment() {
 
         // PL-Med: karta serwera w chmurze tylko w smaku 'cloud'
         binding.cardRemoteServer.isVisible = BuildConfig.CLOUD_ENABLED
+
+        // PL-Med: odswiezanie stanu bramki pod karta co 5 s, dopoki widok zyje
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (isActive) {
+                refreshPlmedStatus()
+                delay(5000)
+            }
+        }
 
         binding.textLocalIP.movementMethod = LinkMovementMethod.getInstance()
         binding.textPublicIP.movementMethod = LinkMovementMethod.getInstance()
@@ -424,6 +436,37 @@ class HomeFragment : Fragment() {
         }
 
         start()
+    }
+
+    // PL-Med: stan pod karta — logotyp gdy wszystko gra, inaczej czerwona lista problemow
+    private suspend fun refreshPlmedStatus() {
+        val ctx = context ?: return
+        val status = try {
+            plmedStatus.snapshot(ctx.applicationContext)
+        } catch (e: Throwable) {
+            return
+        }
+        val b = _binding ?: return
+        val enabled = localServerSettings.enabled
+        b.imageLogo.isVisible = enabled && status.ok
+        b.textPlmedStatus.isVisible = enabled && !status.ok
+        b.textPlmedStatus.text = status.problems.joinToString("\n") { "\u26A0 " + it.text }
+        val lastReq = status.lastPlmedRequestAt
+        b.textPlmedContact.isVisible = enabled && status.ok && lastReq != null
+        if (lastReq != null) {
+            b.textPlmedContact.text = getString(
+                R.string.plmed_status_plmed_ok,
+                PlmedStatusService.formatDuration(ctx, status.now - lastReq)
+            )
+        }
+        val parts = mutableListOf<String>()
+        status.lastStartedAt?.let {
+            parts += getString(R.string.plmed_started_at, PlmedStatusService.formatMoment(ctx, it))
+        }
+        status.lastStoppedAt?.let {
+            parts += getString(R.string.plmed_stopped_at, PlmedStatusService.formatMoment(ctx, it))
+        }
+        b.textServiceStateTime.text = parts.joinToString("  \u00B7  ")
     }
 
     // PL-Med: kolor przycisku Start/Stop: czerwony gdy usluga dziala, zielony (jak przelacznik) gdy serwer
