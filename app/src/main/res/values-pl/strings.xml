@@ -106,8 +106,8 @@
         przez API. Uruchom aplikację ponownie, aby je zastosować.</string>
     <string name="not_available">Niedostępny</string>
     <string name="settings_local_server">Serwer lokalny</string>
-    <string name="button_start_service">Uruchom usługę</string>
-    <string name="button_stop_service">Zatrzymaj usługę</string>
+    <string name="button_start_service">Uruchom</string>
+    <string name="button_stop_service">Zatrzymaj</string>
     <string name="settings_start_on_boot">Uruchamiaj przy starcie telefonu</string>
     <string name="sign_in">Zaloguj</string>
     <string name="sign_up">Zarejestruj</string>

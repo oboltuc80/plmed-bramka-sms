@@ -237,6 +237,19 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- PL-Med: logotyp pod kartami, widoczny gdy serwer lokalny jest wlaczony -->
+            <ImageView
+                android:id="@+id/imageLogo"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="16dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/plmed_logo"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
     </ScrollView>

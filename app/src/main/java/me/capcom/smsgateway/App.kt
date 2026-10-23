@@ -2,6 +2,7 @@ package me.capcom.smsgateway
 
 import android.app.Application
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import healthModule
 import me.capcom.smsgateway.data.dbModule
 import me.capcom.smsgateway.helpers.LocaleHelper
@@ -36,6 +37,9 @@ class App: Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // PL-Med: tylko jasny motyw (logotyp i paleta PL-Med sa projektowane na biale tlo)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         startKoin {
             androidLogger()

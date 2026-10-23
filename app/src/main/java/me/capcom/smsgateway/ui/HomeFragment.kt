@@ -164,6 +164,9 @@ class HomeFragment : Fragment() {
 
             localServerSettings.enabled = isChecked
             binding.layoutLocalServer.isVisible = isChecked
+            // PL-Med: logotyp i kolor przycisku Start zaleza od wlaczenia serwera lokalnego
+            binding.imageLogo.isVisible = isChecked
+            updateStartButton(stateLiveData.value ?: false)
         }
 
         binding.buttonStart.setOnClickListener {
@@ -283,18 +286,7 @@ class HomeFragment : Fragment() {
         }
 
         stateLiveData.observe(viewLifecycleOwner) { isRunning ->
-            binding.buttonStart.apply {
-                text = getString(
-                    if (isRunning) R.string.button_stop_service
-                    else R.string.button_start_service
-                )
-                backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        if (isRunning) R.color.red_800 else R.color.grey_700
-                    )
-                )
-            }
+            updateStartButton(isRunning)
         }
 
         connectionService.status.observe(viewLifecycleOwner) {
@@ -346,6 +338,7 @@ class HomeFragment : Fragment() {
 
         binding.switchUseRemoteServer.isChecked = gatewaySettings.enabled
         binding.switchUseLocalServer.isChecked = localServerSettings.enabled
+        binding.imageLogo.isVisible = localServerSettings.enabled
     }
 
     private fun actionStart(start: Boolean) {
@@ -431,6 +424,29 @@ class HomeFragment : Fragment() {
         }
 
         start()
+    }
+
+    // PL-Med: kolor przycisku Start/Stop: czerwony gdy usluga dziala, zielony (jak przelacznik) gdy serwer
+    // lokalny wlaczony a usluga stoi, szary gdy serwer lokalny wylaczony
+    // (upstream: tekst + kolor red_800/grey_700 ustawiane wprost w obserwatorze stateLiveData)
+    private fun updateStartButton(isRunning: Boolean) {
+        val enabled = localServerSettings.enabled || gatewaySettings.enabled
+        binding.buttonStart.apply {
+            text = getString(
+                if (isRunning) R.string.button_stop_service
+                else R.string.button_start_service
+            )
+            backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    requireContext(),
+                    when {
+                        isRunning -> R.color.red_800
+                        enabled -> R.color.teal_200
+                        else -> R.color.grey_700
+                    }
+                )
+            )
+        }
     }
 
     private val stateLiveData by lazy {
