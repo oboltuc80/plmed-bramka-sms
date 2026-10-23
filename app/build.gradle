@@ -13,11 +13,14 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "me.capcom.smsgateway"
+        // upstream: applicationId "me.capcom.smsgateway"
+        applicationId "pl.plmed.smsgateway"
         minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0.0"
+        // PL-Med: tylko polski i angielski (katalogi values-ar/ru/zh zostaja w zrodlach dla merge z upstream)
+        resourceConfigurations += ["en", "pl"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
