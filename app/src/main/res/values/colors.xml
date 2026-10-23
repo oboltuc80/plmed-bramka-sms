@@ -11,4 +11,5 @@
     <color name="teal_200">#FF5AB060</color>
     <color name="teal_700">#FF3E8A47</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="plmed_hint">#FFB26A00</color>
 </resources>

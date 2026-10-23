@@ -256,7 +256,7 @@
             <!-- PL-Med: logotyp pod kartami, widoczny gdy serwer lokalny jest wlaczony -->
             <ImageView
                 android:id="@+id/imageLogo"
-                android:layout_width="220dp"
+                android:layout_width="176dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="16dp"
@@ -264,6 +264,22 @@
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/plmed_logo"
                 android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- PL-Med: wskazowki (bursztynowe) pod logotypem - logo zostaje -->
+            <TextView
+                android:id="@+id/textPlmedHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@color/plmed_hint"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:text="Wlaczona optymalizacja baterii"
                 tools:visibility="visible" />
 
             <!-- PL-Med: ostatnie polaczenie z PL-Med (szary, pod logotypem) -->
@@ -302,9 +318,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/grey_700"
-        android:minHeight="80dp"
+        android:minHeight="64dp"
         android:text="@string/button_start_service"
-        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:textSize="18sp"
         app:cornerRadius="12dp" />
 
     <TextView

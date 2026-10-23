@@ -451,6 +451,8 @@ class HomeFragment : Fragment() {
         b.imageLogo.isVisible = enabled && status.ok
         b.textPlmedStatus.isVisible = enabled && !status.ok
         b.textPlmedStatus.text = status.problems.joinToString("\n") { "\u26A0 " + it.text }
+        b.textPlmedHint.isVisible = enabled && status.ok && status.hints.isNotEmpty()
+        b.textPlmedHint.text = status.hints.joinToString("\n") { "\u2139 " + it.text }
         val lastReq = status.lastPlmedRequestAt
         b.textPlmedContact.isVisible = enabled && status.ok && lastReq != null
         if (lastReq != null) {

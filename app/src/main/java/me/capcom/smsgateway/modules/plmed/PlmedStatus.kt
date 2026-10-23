@@ -34,7 +34,10 @@ data class PlmedStatus(
     val charging: Boolean,
     val failedSends24h: Int,
     val lastFailedSendAt: Long?,
+    /** Problemy: bramka nie bedzie dzialac (czerwone, logo ukryte). */
     val problems: List<PlmedProblem>,
+    /** Wskazowki: dziala, ale warto poprawic (bursztynowe, logo widoczne). */
+    val hints: List<PlmedProblem>,
 ) {
     val ok: Boolean get() = problems.isEmpty()
 }

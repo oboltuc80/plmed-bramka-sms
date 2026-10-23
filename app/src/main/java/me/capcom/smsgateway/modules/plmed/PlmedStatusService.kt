@@ -118,7 +118,9 @@ class PlmedStatusService(
         val lastReq = lastRequestAt
         val startedAt = lastStartedAt
         val problems = mutableListOf<PlmedProblem>()
+        val hints = mutableListOf<PlmedProblem>()
         fun problem(code: String, text: String) = problems.add(PlmedProblem(code, text))
+        fun hint(code: String, text: String) = hints.add(PlmedProblem(code, text))
 
         if (!running) {
             problem("SERVICE_OFF", context.getString(R.string.plmed_status_service_off))
@@ -159,13 +161,13 @@ class PlmedStatusService(
             problem("NO_SMS_PERMISSION", context.getString(R.string.plmed_status_no_sms_permission))
         }
         if (!batteryOptIgnored) {
-            problem("BATTERY_OPTIMIZATION", context.getString(R.string.plmed_status_battery_optimization))
+            hint("BATTERY_OPTIMIZATION", context.getString(R.string.plmed_status_battery_optimization))
         }
         if (level != null && level <= LOW_BATTERY && !charging) {
-            problem("BATTERY_LOW", context.getString(R.string.plmed_status_battery_low, level))
+            hint("BATTERY_LOW", context.getString(R.string.plmed_status_battery_low, level))
         }
         if (failed != null && failed.count > 0) {
-            problem(
+            hint(
                 "FAILED_SENDS",
                 context.getString(
                     R.string.plmed_status_failed_sends,
@@ -196,6 +198,7 @@ class PlmedStatusService(
             failedSends24h = failed?.count ?: 0,
             lastFailedSendAt = failed?.lastTimestamp?.takeIf { it > 0 },
             problems = problems,
+            hints = hints,
         )
     }
 
