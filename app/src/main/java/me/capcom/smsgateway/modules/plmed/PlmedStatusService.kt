@@ -182,6 +182,8 @@ class PlmedStatusService(
 
         PlmedStatus(
             appVersion = BuildConfig.VERSION_NAME,
+            deviceId = localServerSettings.deviceId,
+            model = "${Build.MANUFACTURER} ${Build.MODEL}".trim(),
             now = now,
             serviceRunning = running,
             lastStartedAt = startedAt,

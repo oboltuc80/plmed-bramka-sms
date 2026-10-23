@@ -16,6 +16,9 @@ data class PlmedProblem(
 
 data class PlmedStatus(
     val appVersion: String,
+    /** Identyfikator urządzenia serwera lokalnego — do odnalezienia telefonu po zmianie IP (skan podsieci w PL-Med). */
+    val deviceId: String?,
+    val model: String,
     val now: Long,
     val serviceRunning: Boolean,
     val lastStartedAt: Long?,
