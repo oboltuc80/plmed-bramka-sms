@@ -11,12 +11,13 @@ import io.ktor.server.routing.get
  * jak pozostałe trasy). Osobna trasa obok /health, API upstream nietknięte.
  */
 class PlmedStatusRoutes(
-    private val context: Context,
+    private val appContext: Context,
     private val service: PlmedStatusService,
 ) {
     fun register(routing: Route) {
         routing.get("/status") {
-            call.respond(service.snapshot(context))
+            // uwaga: w handlerze ktor 'context' to ApplicationCall, stad nazwa appContext
+            call.respond(service.snapshot(appContext))
         }
     }
 }
