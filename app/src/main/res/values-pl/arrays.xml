@@ -1,0 +1,33 @@
+<resources>
+    <string-array name="limit_periods_titles">
+        <item>wyłączone</item>
+        <item>minuta</item>
+        <item>30 minut</item>
+        <item>godzina</item>
+        <item>dzień</item>
+    </string-array>
+    <string-array name="sim_selection_modes_titles">
+        <item>Domyślna systemu</item>
+        <item>Na przemian</item>
+        <item>Losowo</item>
+    </string-array>
+    <string-array name="processing_order_titles">
+        <item>LIFO (najpierw nowsze wiadomości)</item>
+        <item>FIFO (najpierw starsze wiadomości)</item>
+    </string-array>
+    <string-array name="notification_channels_titles">
+        <item>Automatycznie</item>
+        <item>Tylko SSE</item>
+    </string-array>
+    <string-array name="language_entries">
+        <item>@string/language_system</item>
+        <item>Polski</item>
+        <item>English</item>
+    </string-array>
+    <string-array name="rotation_intervals_titles">
+        <item>@string/disabled</item>
+        <item>30 dni</item>
+        <item>60 dni</item>
+        <item>90 dni</item>
+    </string-array>
+</resources>
