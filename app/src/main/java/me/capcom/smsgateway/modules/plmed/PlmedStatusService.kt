@@ -152,6 +152,9 @@ class PlmedStatusService(
                 )
             }
         }
+        if (running && lastReq == null && storage.get<Long>(PlmedPairingService.PAIRED_AT) == null) {
+            hint("NOT_PAIRED", context.getString(R.string.plmed_status_not_paired))
+        }
         if (airplane) problem("AIRPLANE", context.getString(R.string.plmed_status_airplane))
         if (!simReady) problem("NO_SIM", context.getString(R.string.plmed_status_no_sim))
         else if (!mobileNetwork && !airplane) {

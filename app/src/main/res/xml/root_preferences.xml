@@ -1,5 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- PL-Med: parowanie z PL-Med (kod QR / kod 6 znakow) -->
+    <Preference
+        app:key="plmed_pairing"
+        app:fragment="me.capcom.smsgateway.ui.settings.PlmedPairingFragment"
+        app:icon="@drawable/ic_plmed_pair"
+        app:summary="@string/plmed_pair_entry_summary"
+        app:title="@string/plmed_pair_entry_title" />
     <Preference
         app:fragment="me.capcom.smsgateway.ui.settings.DeviceSettingsFragment"
         app:icon="@drawable/ic_encryption"

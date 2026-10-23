@@ -12,4 +12,11 @@ val plmedModule = module {
             get(),
         )
     }
+    single {
+        PlmedPairingService(
+            PreferencesStorage(get(), "plmed"),
+            get(),
+            get(),
+        )
+    }
 }

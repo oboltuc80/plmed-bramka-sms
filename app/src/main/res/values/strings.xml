@@ -241,4 +241,33 @@
     <string name="plmed_duration_seconds">%1$d s</string>
     <string name="plmed_duration_minutes">%1$d min</string>
     <string name="plmed_duration_hours">%1$d h</string>
+    <!-- PL-Med: parowanie z PL-Med -->
+    <string name="plmed_pair_entry_title">Connect with PL-Med…</string>
+    <string name="plmed_pair_entry_summary">Scan the QR code from PL-Med or type the 6-character code</string>
+    <string name="plmed_pair_title">Connect with PL-Med</string>
+    <string name="plmed_pair_intro">In PL-Med open the SMS Gateway module and choose "Connect phone". Scan the QR code shown on the computer screen or type the 6-character code. The phone will receive the gateway settings and report its address back to PL-Med.</string>
+    <string name="plmed_pair_scan">Scan QR code</string>
+    <string name="plmed_pair_scan_prompt">Point the camera at the QR code in PL-Med</string>
+    <string name="plmed_pair_or_type">…or type the code from the PL-Med screen:</string>
+    <string name="plmed_pair_code_hint">e.g. RSV-APW</string>
+    <string name="plmed_pair_connect">Connect</string>
+    <string name="plmed_pair_step_fetch">Fetching settings from PL-Med…</string>
+    <string name="plmed_pair_step_apply">Saving settings and restarting the gateway…</string>
+    <string name="plmed_pair_step_send">Sending phone address to PL-Med…</string>
+    <string name="plmed_pair_step_wait">Waiting for PL-Med to confirm the connection… (%1$d s)</string>
+    <string name="plmed_pair_ok">PL-Med connected to this phone (%1$s)</string>
+    <string name="plmed_pair_no_confirm">PL-Med did not confirm the connection — check the result in PL-Med</string>
+    <string name="plmed_pair_last_ok">Last connection: %1$s, %2$s — successful</string>
+    <string name="plmed_pair_last_failed">Last connection: %1$s, %2$s — not confirmed</string>
+    <string name="plmed_pair_err_bad_code">Enter the 6-character code shown in PL-Med</string>
+    <string name="plmed_pair_err_bad_qr">This is not a PL-Med pairing QR code</string>
+    <string name="plmed_pair_err_code_invalid">Code is invalid or has expired — generate a new one in PL-Med</string>
+    <string name="plmed_pair_err_expired">The code expired before PL-Med replied — try again</string>
+    <string name="plmed_pair_err_rate_limited">Too many attempts — wait 10 minutes</string>
+    <string name="plmed_pair_err_network">No connection to the PL-Med server — check the Internet connection on the phone</string>
+    <string name="plmed_pair_err_bad_response">Unexpected reply from the PL-Med server</string>
+    <string name="plmed_pair_err_no_ip">The phone has no Wi-Fi address — turn on Wi-Fi (same network as the computer) and try again</string>
+    <string name="plmed_pair_err_service">The gateway service did not start — check the Home tab</string>
+    <string name="plmed_pair_privacy">Only gateway settings (password, port, addresses) pass through the PL-Med server. Text messages and phone numbers never do.</string>
+    <string name="plmed_status_not_paired">Phone not connected with PL-Med yet — Settings → Connect with PL-Med</string>
 </resources>

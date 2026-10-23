@@ -230,4 +230,33 @@
     <string name="plmed_duration_seconds">%1$d s</string>
     <string name="plmed_duration_minutes">%1$d min</string>
     <string name="plmed_duration_hours">%1$d h</string>
+    <!-- PL-Med: parowanie z PL-Med -->
+    <string name="plmed_pair_entry_title">Połącz z PL-Med…</string>
+    <string name="plmed_pair_entry_summary">Zeskanuj kod QR z PL-Med lub wpisz 6-znakowy kod</string>
+    <string name="plmed_pair_title">Połączenie z PL-Med</string>
+    <string name="plmed_pair_intro">W PL-Med otwórz moduł Bramka SMS i wybierz „Połącz telefon". Zeskanuj kod QR z ekranu komputera albo wpisz 6-znakowy kod. Telefon pobierze ustawienia bramki i odeśle swój adres do PL-Med.</string>
+    <string name="plmed_pair_scan">Skanuj kod QR</string>
+    <string name="plmed_pair_scan_prompt">Skieruj aparat na kod QR w PL-Med</string>
+    <string name="plmed_pair_or_type">…albo wpisz kod z ekranu PL-Med:</string>
+    <string name="plmed_pair_code_hint">np. RSV-APW</string>
+    <string name="plmed_pair_connect">Połącz</string>
+    <string name="plmed_pair_step_fetch">Pobieranie ustawień z PL-Med…</string>
+    <string name="plmed_pair_step_apply">Zapisywanie ustawień i restart bramki…</string>
+    <string name="plmed_pair_step_send">Wysyłanie adresu telefonu do PL-Med…</string>
+    <string name="plmed_pair_step_wait">Czekam, aż PL-Med potwierdzi połączenie… (%1$d s)</string>
+    <string name="plmed_pair_ok">PL-Med połączył się z telefonem (%1$s)</string>
+    <string name="plmed_pair_no_confirm">PL-Med nie potwierdził połączenia — sprawdź wynik w PL-Med</string>
+    <string name="plmed_pair_last_ok">Ostatnie połączenie: %1$s, %2$s — udane</string>
+    <string name="plmed_pair_last_failed">Ostatnie połączenie: %1$s, %2$s — niepotwierdzone</string>
+    <string name="plmed_pair_err_bad_code">Wpisz 6-znakowy kod widoczny w PL-Med</string>
+    <string name="plmed_pair_err_bad_qr">To nie jest kod QR parowania z PL-Med</string>
+    <string name="plmed_pair_err_code_invalid">Kod nieprawidłowy lub wygasł — wygeneruj nowy w PL-Med</string>
+    <string name="plmed_pair_err_expired">Kod wygasł, zanim PL-Med odpowiedział — spróbuj ponownie</string>
+    <string name="plmed_pair_err_rate_limited">Za dużo prób — odczekaj 10 minut</string>
+    <string name="plmed_pair_err_network">Brak połączenia z serwerem PL-Med — sprawdź Internet w telefonie</string>
+    <string name="plmed_pair_err_bad_response">Nieoczekiwana odpowiedź serwera PL-Med</string>
+    <string name="plmed_pair_err_no_ip">Telefon nie ma adresu w sieci Wi-Fi — włącz Wi-Fi (ta sama sieć co komputer) i spróbuj ponownie</string>
+    <string name="plmed_pair_err_service">Usługa bramki nie wystartowała — sprawdź zakładkę Start</string>
+    <string name="plmed_pair_privacy">Przez serwer PL-Med przechodzą wyłącznie ustawienia bramki (hasło, port, adresy). Treść SMS-ów i numery telefonów — nigdy.</string>
+    <string name="plmed_status_not_paired">Telefon nie jest jeszcze połączony z PL-Med — Ustawienia → Połącz z PL-Med</string>
 </resources>

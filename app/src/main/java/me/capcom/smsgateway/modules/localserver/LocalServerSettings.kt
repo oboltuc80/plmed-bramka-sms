@@ -42,6 +42,15 @@ class LocalServerSettings(
         get() = storage.get<Long>(JWT_TTL_SECONDS) ?: (24L * 60L * 60L)
         set(value) = storage.set(JWT_TTL_SECONDS, value)
 
+    /**
+     * PL-Med: parowanie z PL-Med ustawia haslo i port serwera lokalnego.
+     * Port zapisujemy jako tekst - tak trzyma go EditTextPreference "localserver.PORT".
+     */
+    fun applyPairing(password: String, port: Int) {
+        storage.set(PASSWORD, password)
+        storage.set(PORT, port.toString())
+    }
+
     fun regenerateJwtSecret(): String {
         return NanoIdUtils.randomNanoId(
             NanoIdUtils.DEFAULT_NUMBER_GENERATOR,
