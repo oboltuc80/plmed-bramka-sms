@@ -27,6 +27,7 @@ import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.NotFoundException
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.path
 import io.ktor.server.response.header
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
@@ -86,7 +87,9 @@ class WebService : Service() {
                         when {
                             credentials.name == username
                                     && credentials.password == password -> {
-                                plmedStatus.noteRequest()
+                                // PL-Med: odpytanie samego stanu nie liczy sie jako "kontakt z PL-Med"
+                                // (inaczej "ostatni kontakt" w /plmed/status bylby zawsze "przed chwila")
+                                if (!request.path().startsWith("/plmed/")) plmedStatus.noteRequest()
                                 UserIdPrincipal(credentials.name)
                             }
 
@@ -103,7 +106,7 @@ class WebService : Service() {
                             return@validate null
                         }
 
-                        plmedStatus.noteRequest()
+                        if (!request.path().startsWith("/plmed/")) plmedStatus.noteRequest()
                         JWTPrincipal(credential.payload)
                     }
                 }
