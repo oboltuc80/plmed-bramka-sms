@@ -87,9 +87,11 @@ class WebService : Service() {
                         when {
                             credentials.name == username
                                     && credentials.password == password -> {
-                                // PL-Med: odpytanie samego stanu nie liczy sie jako "kontakt z PL-Med"
-                                // (inaczej "ostatni kontakt" w /plmed/status bylby zawsze "przed chwila")
-                                if (!request.path().startsWith("/plmed/")) plmedStatus.noteRequest()
+                                // PL-Med: kontakt z PL-Med - W9-4: kazde uwierzytelnione zadanie; rozdzial na
+                                // roboczy (bez /plmed/*: "ostatni kontakt" w /plmed/status nie moze byc zawsze
+                                // "przed chwila", D-3-1) i dowolny w PlmedStatusService.noteRequest
+                                // (W7: if (!request.path().startsWith("/plmed/")) plmedStatus.noteRequest())
+                                plmedStatus.noteRequest(request.path())
                                 UserIdPrincipal(credentials.name)
                             }
 
@@ -106,7 +108,8 @@ class WebService : Service() {
                             return@validate null
                         }
 
-                        if (!request.path().startsWith("/plmed/")) plmedStatus.noteRequest()
+                        // PL-Med W9-4: jak w auth-basic (W7: if (!...startsWith("/plmed/")) noteRequest())
+                        plmedStatus.noteRequest(request.path())
                         JWTPrincipal(credential.payload)
                     }
                 }

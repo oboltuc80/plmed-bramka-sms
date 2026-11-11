@@ -38,12 +38,25 @@ class PlmedStatusService(
     private val messagesDao: MessagesDao,
     private val localServerSettings: LocalServerSettings,
 ) {
+    // PL-Med W9-4: dwa znaczniki kontaktu z PL-Med (oba zerowane przy starcie uslugi):
+    //  - roboczy: uwierzytelnione zadania poza /plmed/* - pole lastPlmedRequestAt w JSON /plmed/status (D-3-1:
+    //    z niego modul PL-Med pokazuje "ostatni kontakt z PL-Med", samo odpytanie stanu nie moze go odswiezac),
+    //  - dowolny: kazde uwierzytelnione zadanie (takze /plmed/*) i udane parowanie (W9-3) - wlasna ocena
+    //    telefonu w smaku 'local' (PLMED_SILENT, stan "Polaczono z PL-Med" na ekranie Start)
     @Volatile
     private var lastRequestAt: Long? = null
 
-    /** Wołane przy każdym uwierzytelnionym żądaniu do serwera lokalnego. */
-    fun noteRequest() {
-        lastRequestAt = System.currentTimeMillis()
+    @Volatile
+    private var lastContactAt: Long? = null
+
+    /**
+     * Wołane przy każdym uwierzytelnionym żądaniu do serwera lokalnego ([path] — ścieżka żądania).
+     * W9-4: dotąd wołane tylko poza /plmed/* (warunek w WebService); teraz rozdział tutaj.
+     */
+    fun noteRequest(path: String) {
+        val now = System.currentTimeMillis()
+        lastContactAt = now
+        if (!path.startsWith(PLMED_ROUTES)) lastRequestAt = now
     }
 
     /** Wołane przy faktycznej zmianie stanu usługi serwera lokalnego. */
@@ -57,6 +70,7 @@ class PlmedStatusService(
         if (running) {
             storage.set(LAST_STARTED_AT, now)
             lastRequestAt = null
+            lastContactAt = null
         } else {
             storage.set(LAST_STOPPED_AT, now)
         }
@@ -70,7 +84,16 @@ class PlmedStatusService(
     val stateHistory: List<StateChange>
         get() = storage.get<List<StateChange>>(HISTORY) ?: emptyList()
 
-    suspend fun snapshot(context: Context): PlmedStatus = withContext(Dispatchers.IO) {
+    /**
+     * PL-Med W9: stan dla ekranu Start — [status] jak w JSON /plmed/status oraz [contactAt]: kontakt z PL-Med,
+     * z którego telefon ocenia sam siebie (smak 'local': kontakt dowolny, W9-4; 'cloud': roboczy jak dotąd).
+     * [contactAt] celowo poza [PlmedStatus] — format JSON /plmed/status bez zmian.
+     */
+    data class ScreenState(val status: PlmedStatus, val contactAt: Long?)
+
+    suspend fun snapshot(context: Context): PlmedStatus = screenState(context).status
+
+    suspend fun screenState(context: Context): ScreenState = withContext(Dispatchers.IO) {
         val now = System.currentTimeMillis()
         val running = WebService.STATUS.value ?: false
 
@@ -116,6 +139,9 @@ class PlmedStatusService(
         }
 
         val lastReq = lastRequestAt
+        // PL-Med W9-4: PLMED_SILENT z kontaktu dowolnego (okno modulu PL-Med i sonda odpytuja /plmed/*) - w smaku
+        // 'local'; w 'cloud' jak dotad z roboczego
+        val contact = if (BuildConfig.CLOUD_ENABLED) lastReq else lastContactAt
         val startedAt = lastStartedAt
         val problems = mutableListOf<PlmedProblem>()
         val hints = mutableListOf<PlmedProblem>()
@@ -132,7 +158,7 @@ class PlmedStatusService(
         }
         if (running && wifi && ipValid) {
             val sinceStart = now - (startedAt ?: now)
-            if (lastReq == null) {
+            if (contact == null) {
                 if (sinceStart > PLMED_SILENT_MS) {
                     problem(
                         "PLMED_SILENT",
@@ -142,12 +168,12 @@ class PlmedStatusService(
                         )
                     )
                 }
-            } else if (now - lastReq > PLMED_SILENT_MS) {
+            } else if (now - contact > PLMED_SILENT_MS) {
                 problem(
                     "PLMED_SILENT",
                     context.getString(
                         R.string.plmed_status_plmed_silent,
-                        formatDuration(context, now - lastReq)
+                        formatDuration(context, now - contact)
                     )
                 )
             }
@@ -182,7 +208,7 @@ class PlmedStatusService(
             )
         }
 
-        PlmedStatus(
+        val status = PlmedStatus(
             appVersion = BuildConfig.VERSION_NAME,
             deviceId = localServerSettings.deviceId,
             model = "${Build.MANUFACTURER} ${Build.MODEL}".trim(),
@@ -207,6 +233,7 @@ class PlmedStatusService(
             problems = problems,
             hints = hints,
         )
+        ScreenState(status, contact)
     }
 
     private fun isWifiConnected(context: Context): Boolean {
@@ -233,6 +260,7 @@ class PlmedStatusService(
         private const val DAY_MS = 24L * 60L * 60L * 1000L
         private const val PLMED_SILENT_MS = 2L * 60L * 1000L
         private const val LOW_BATTERY = 15
+        private const val PLMED_ROUTES = "/plmed/"
 
         /** "8 s" / "5 min" / "3 h" */
         fun formatDuration(context: Context, ms: Long): String {
