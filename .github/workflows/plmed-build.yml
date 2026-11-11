@@ -46,8 +46,16 @@ jobs:
           else
             VERSION_NAME="0.0.0-dev.${GITHUB_RUN_NUMBER}"
           fi
-          # versionCode = dni od 2022-06-15 (ta sama konwencja co upstream, rosnie monotonicznie)
-          VERSION_CODE=$(( ($(date +%s) - $(date -d "2022-06-15" +%s)) / 86400 ))
+          # versionCode = MINUTY od 2022-06-15 00:00 UTC (PL-Med W7; wczesniej dni od 2022-06-15 jak upstream).
+          # Dni dawaly ten sam kod wydaniom z jednego dnia (plmed.5 i plmed.6). Minuty: rosna monotonicznie,
+          # sa unikalne (wydanie = tag pchany recznie, nie dwa w jednej minucie), sa wieksze od dotychczasowych
+          # kodow (~1592 przy plmed.7 -> aktualizacja w miejscu dziala) i mieszcza sie w limicie Androida
+          # 2 100 000 000 (wystarczy na ok. 3990 lat).
+          VERSION_CODE=$(( ($(date -u +%s) - $(date -u -d "2022-06-15T00:00:00Z" +%s)) / 60 ))
+          if (( VERSION_CODE <= 1592 || VERSION_CODE > 2100000000 )); then
+            echo "::error::versionCode ${VERSION_CODE} poza zakresem (1593..2100000000) - sprawdz zegar runnera"
+            exit 1
+          fi
           sed -i "s/versionName.*/versionName \"${VERSION_NAME}\"/" app/build.gradle
           sed -i "s/versionCode.*/versionCode ${VERSION_CODE}/" app/build.gradle
           echo "name=${VERSION_NAME}" >> "$GITHUB_OUTPUT"
