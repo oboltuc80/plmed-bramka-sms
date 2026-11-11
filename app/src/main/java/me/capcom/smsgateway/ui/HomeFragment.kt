@@ -381,20 +381,23 @@ class HomeFragment : Fragment() {
 
     // PL-Med: ten sam ekran co Ustawienia -> "Polacz z PL-Med..." (PlmedPairingFragment), otwierany tak jak
     // podekrany ustawien (PreferenceFragmentCompat: replace w kontenerze strony + stos powrotu) - nakladka
-    // na zakladce Start, Wstecz wraca na Start
+    // na zakladce Start, Wstecz wraca na Start. W9-1: wspolna droga PlmedPairingFragment.open (nazwany wpis
+    // na stosie - po udanym parowaniu ekran zamyka sie sam); W7: transakcja tutaj, tag "plmed_pairing_from_home"
     private fun openPlmedPairing() {
-        val fm = parentFragmentManager
-        if (fm.isStateSaved || fm.findFragmentByTag(TAG_PLMED_PAIRING) != null) return
-        val containerId = (view?.parent as? View)?.id ?: return
-        if (containerId == View.NO_ID) return
-        fm.beginTransaction()
-            .replace(containerId, PlmedPairingFragment(), TAG_PLMED_PAIRING)
-            .addToBackStack(null)
-            .commit()
+        PlmedPairingFragment.open(this)
     }
 
-    // PL-Med: po zamknieciu ekranu parowania otwartego z odsylacza HomeFragment nie przechodzi przez onResume
-    private val backStackListener = FragmentManager.OnBackStackChangedListener { syncAutostartSwitch() }
+    // PL-Med: po zamknieciu ekranu parowania otwartego z odsylacza HomeFragment nie przechodzi przez onResume.
+    // W9-1: po powrocie z parowania (takze z Ustawien) stan pod logo od razu, bez czekania na cykl 5 s
+    private val backStackListener = FragmentManager.OnBackStackChangedListener {
+        syncAutostartSwitch()
+        refreshPlmedStatusNow()
+    }
+
+    private fun refreshPlmedStatusNow() {
+        val owner = viewLifecycleOwnerLiveData.value ?: return
+        owner.lifecycleScope.launch { refreshPlmedStatus() }
+    }
 
     // PL-Med: parowanie z PL-Med wlacza autostart (PlmedPairingService) - przelacznik na ekranie Start
     // byl ustawiany tylko przy tworzeniu widoku i po powrocie z parowania pokazywalby stary stan
@@ -601,8 +604,6 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG_PLMED_PAIRING = "plmed_pairing_from_home"
-
         @JvmStatic
         fun newInstance() =
             HomeFragment()

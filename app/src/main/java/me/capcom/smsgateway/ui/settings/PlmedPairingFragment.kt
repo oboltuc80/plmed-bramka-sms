@@ -2,6 +2,7 @@ package me.capcom.smsgateway.ui.settings
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.text.InputFilter
@@ -11,19 +12,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.capcom.smsgateway.BuildConfig
+import me.capcom.smsgateway.MainActivity
 import me.capcom.smsgateway.R
 import me.capcom.smsgateway.databinding.FragmentPlmedPairingBinding
 import me.capcom.smsgateway.modules.localserver.WebService
 import me.capcom.smsgateway.modules.plmed.PlmedPairingService
 import me.capcom.smsgateway.modules.plmed.PlmedStatusService
 import org.koin.android.ext.android.inject
+import java.util.UUID
 
 /**
  * PL-Med: ekran "Połącz z PL-Med" — skan kodu QR z okna PL-Med albo wpisanie 6-znakowego kodu.
@@ -112,6 +118,7 @@ class PlmedPairingFragment : Fragment() {
         setBusy(true)
         binding.textResult.isVisible = false
         job = viewLifecycleOwner.lifecycleScope.launch {
+            var paired = false
             try {
                 val outcome = pairingSvc.pair(requireContext(), input) { step ->
                     _binding?.textStep?.text = step
@@ -123,6 +130,7 @@ class PlmedPairingFragment : Fragment() {
                     outcome.message.ifEmpty { getString(R.string.plmed_pair_no_confirm) }
                 }
                 showResult(outcome.ok, text)
+                paired = outcome.ok
             } catch (e: PlmedPairingService.PairingException) {
                 showResult(false, e.message ?: getString(R.string.plmed_pair_err_network))
             } catch (e: Throwable) {
@@ -131,7 +139,26 @@ class PlmedPairingFragment : Fragment() {
                 setBusy(false)
                 showLastPairing()
             }
+            // PL-Med W9-1: po sukcesie od razu na Start (potwierdzenie: zielone "Polaczono z PL-Med", W9-2);
+            // po kazdej porazce zostajemy - recepcja ma przeczytac przyczyne
+            if (paired) returnToStart()
         }
+    }
+
+    // PL-Med W9-1: zamkniecie ekranu parowania i zakladka Start - obie drogi wejscia (odsylacz na Start i
+    // Ustawienia -> "Polacz z PL-Med...") otwieraja ten ekran przez open() z nazwanym wpisem na stosie.
+    // Tylko gdy ekran jest nadal na wierzchu: uzytkownik mogl w tym czasie wyjsc (Wstecz, inna zakladka, inna
+    // aplikacja); po onSaveInstanceState (obrot, tlo) transakcji nie wolno - wtedy ekran zostaje z wynikiem.
+    private fun returnToStart() {
+        if (BuildConfig.CLOUD_ENABLED) return
+        if (!isAdded || isRemoving || !isResumed) return
+        val fm = parentFragmentManager
+        if (fm.isStateSaved) return
+        val v = view ?: return
+        if (!v.isShown || !v.getGlobalVisibleRect(Rect())) return
+        val entry = arguments?.getString(ARG_BACK_STACK_ENTRY) ?: return
+        fm.popBackStack(entry, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        (activity as? MainActivity)?.selectTab(MainActivity.TAB_INDEX_HOME)
     }
 
     private fun setBusy(busy: Boolean) {
@@ -181,5 +208,33 @@ class PlmedPairingFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val TAG = "plmed_pairing"
+        private const val ARG_BACK_STACK_ENTRY = "back_stack_entry"
+
+        /**
+         * PL-Med: otwiera ekran parowania jako nakladke na stronie [host] (Start - odsylacz, D-W7-5; Ustawienia -
+         * "Polacz z PL-Med...") tak jak podekrany ustawien (PreferenceFragmentCompat: replace w kontenerze strony
+         * + stos powrotu; Wstecz wraca). W9-1: wpis na stosie ma wlasna nazwe - po udanym parowaniu ekran zdejmuje
+         * dokladnie siebie ([returnToStart]).
+         */
+        fun open(host: Fragment) {
+            val fm = host.parentFragmentManager
+            if (fm.isStateSaved) return
+            val containerId = (host.view?.parent as? View)?.id ?: return
+            if (containerId == View.NO_ID) return
+            // ekran juz otwarty na tej stronie (np. drugi stuk)
+            if (fm.fragments.any { it is PlmedPairingFragment && it.id == containerId && !it.isRemoving }) return
+            val entry = "$TAG:${UUID.randomUUID()}"
+            val fragment = PlmedPairingFragment().apply {
+                arguments = bundleOf(ARG_BACK_STACK_ENTRY to entry)
+            }
+            fm.beginTransaction()
+                .replace(containerId, fragment, TAG)
+                .addToBackStack(entry)
+                .commit()
+        }
     }
 }

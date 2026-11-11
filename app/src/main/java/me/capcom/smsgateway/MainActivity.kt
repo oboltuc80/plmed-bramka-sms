@@ -56,6 +56,11 @@ class MainActivity : AppCompatActivity() {
         processIntent(intent)
     }
 
+    // PL-Med W9-1: przelaczenie zakladki z kodu (ekran parowania po sukcesie -> Start) - jak stukniecie w zakladke
+    fun selectTab(tabIndex: Int) {
+        binding.viewPager.currentItem = tabIndex
+    }
+
     private fun processIntent(intent: Intent) {
         val tabIndex = intent.getIntExtra(EXTRA_TAB_INDEX, TAB_INDEX_HOME)
 

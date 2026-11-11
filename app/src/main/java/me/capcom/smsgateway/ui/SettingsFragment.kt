@@ -17,6 +17,7 @@ import me.capcom.smsgateway.BuildConfig
 import me.capcom.smsgateway.MainActivity
 import me.capcom.smsgateway.R
 import me.capcom.smsgateway.helpers.LocaleHelper
+import me.capcom.smsgateway.ui.settings.PlmedPairingFragment
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -79,6 +80,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         if (preference.key == "system.disable_battery_optimizations") {
             requestIgnoreBatteryOptimizations()
+            return true
+        }
+
+        // PL-Med W9-1: "Polacz z PL-Med..." ta sama droga co odsylacz na Start (PlmedPairingFragment.open: nazwany
+        // wpis na stosie - po udanym parowaniu ekran zamyka sie sam i przelacza na Start). Dotad (i w smaku
+        // 'cloud') domyslnie przez PreferenceFragmentCompat z app:fragment (replace w kontenerze + stos)
+        if (!BuildConfig.CLOUD_ENABLED && preference.key == "plmed_pairing") {
+            PlmedPairingFragment.open(this)
             return true
         }
 
