@@ -163,7 +163,9 @@ class PlmedStatusService(
         if (!smsPermission) {
             problem("NO_SMS_PERMISSION", context.getString(R.string.plmed_status_no_sms_permission))
         }
-        if (!batteryOptIgnored) {
+        // PL-Med W7: w smaku 'local' bez wskazowki o optymalizacji baterii (decyzja 2026-11-10: monit
+        // powodowal telefony klientow do serwisu); pole batteryOptimizationIgnored w JSON zostaje (kontrakt)
+        if (BuildConfig.CLOUD_ENABLED && !batteryOptIgnored) {
             hint("BATTERY_OPTIMIZATION", context.getString(R.string.plmed_status_battery_optimization))
         }
         if (level != null && level <= LOW_BATTERY && !charging) {
