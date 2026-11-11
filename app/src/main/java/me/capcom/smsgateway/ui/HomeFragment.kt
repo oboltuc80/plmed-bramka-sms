@@ -144,6 +144,9 @@ class HomeFragment : Fragment() {
         if (!BuildConfig.CLOUD_ENABLED) {
             binding.switchUseLocalServer.isVisible = false
             binding.layoutLocalServer.isVisible = true
+            // PL-Med: w sieci kliniki adres publiczny jest zawsze "Niedostepny" - recepcja czytala to jako awarie
+            binding.labelPublicIP.isVisible = false
+            binding.textPublicIP.isVisible = false
         }
 
         // PL-Med: odswiezanie stanu bramki pod karta co 5 s, dopoki widok zyje

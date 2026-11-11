@@ -97,7 +97,9 @@
                             android:text="@string/dots"
                             tools:text="127.0.0.1:8080" />
 
+                        <!-- PL-Med: id do ukrycia wiersza w smaku 'local' (upstream: bez android:id) -->
                         <TextView
+                            android:id="@+id/labelPublicIP"
                             style="@style/HomeCardLabel"
                             android:text="@string/public_address" />
 
