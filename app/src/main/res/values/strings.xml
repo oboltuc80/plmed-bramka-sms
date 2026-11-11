@@ -247,11 +247,17 @@
     <string name="plmed_pair_entry_title">Connect with PL-Med…</string>
     <string name="plmed_pair_entry_summary">Scan the QR code from PL-Med or type the 6-character code</string>
     <string name="plmed_pair_title">Connect with PL-Med</string>
-    <string name="plmed_pair_intro">In PL-Med open the SMS Gateway module and choose "Connect phone". Scan the QR code shown on the computer screen or type the 6-character code. The phone will receive the gateway settings and report its address back to PL-Med.</string>
+    <string name="plmed_pair_intro">To pair this phone with the computer:</string>
+    <string name="plmed_pair_howto_open">in PL-Med open the module: Bramka SMS (SMS gateway)</string>
+    <string name="plmed_pair_howto_choose">choose: Parowanie telefonu (phone pairing)</string>
+    <string name="plmed_pair_howto_scan">scan the QR code</string>
+    <string name="plmed_pair_scan_lead">Tap the button below to start pairing:</string>
+    <!-- PL-Med W8: punktor instrukcji na ekranie parowania (jak password_hidden - symbol, bez tlumaczenia) -->
+    <string name="plmed_pair_bullet" translatable="false">•</string>
     <string name="plmed_pair_scan">Scan QR code</string>
     <string name="plmed_pair_scan_prompt">Point the camera at the QR code in PL-Med</string>
-    <string name="plmed_pair_or_type">…or type the code from the PL-Med screen:</string>
-    <string name="plmed_pair_code_hint">e.g. RSV-APW</string>
+    <string name="plmed_pair_or_type">You can type in the code shown in PL-Med manually (instead of scanning the QR code):</string>
+    <string name="plmed_pair_code_hint">enter code</string>
     <string name="plmed_pair_connect">Connect</string>
     <string name="plmed_pair_step_fetch">Fetching settings from PL-Med…</string>
     <string name="plmed_pair_step_apply">Saving settings and restarting the gateway…</string>
