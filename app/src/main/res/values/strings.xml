@@ -272,4 +272,5 @@
     <string name="plmed_pair_err_service">The gateway service did not start — check the Home tab</string>
     <string name="plmed_pair_privacy">Only gateway settings (password, port, addresses) pass through the PL-Med server. Text messages and phone numbers never do.</string>
     <string name="plmed_status_not_paired">Phone not connected with PL-Med yet — Settings → Connect with PL-Med</string>
+    <string name="plmed_pair_link">Connect with PL-Med</string>
 </resources>

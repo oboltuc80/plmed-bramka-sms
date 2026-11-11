@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -24,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.toSpanned
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.lifecycleScope
@@ -45,6 +47,7 @@ import me.capcom.smsgateway.modules.localserver.LocalServerSettings
 import me.capcom.smsgateway.modules.localserver.events.IPReceivedEvent
 import me.capcom.smsgateway.modules.orchestrator.OrchestratorService
 import me.capcom.smsgateway.ui.dialogs.FirstStartDialogFragment
+import me.capcom.smsgateway.ui.settings.PlmedPairingFragment
 import org.koin.android.ext.android.inject
 
 class HomeFragment : Fragment() {
@@ -147,6 +150,11 @@ class HomeFragment : Fragment() {
             // PL-Med: w sieci kliniki adres publiczny jest zawsze "Niedostepny" - recepcja czytala to jako awarie
             binding.labelPublicIP.isVisible = false
             binding.textPublicIP.isVisible = false
+            // PL-Med: odsylacz "Polacz z PL-Med" pod logo (widocznosc w refreshPlmedStatus)
+            binding.textPlmedPairLink.paintFlags =
+                binding.textPlmedPairLink.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            binding.textPlmedPairLink.setOnClickListener { openPlmedPairing() }
+            parentFragmentManager.addOnBackStackChangedListener(backStackListener)
         }
 
         // PL-Med: odswiezanie stanu bramki pod karta co 5 s, dopoki widok zyje
@@ -368,6 +376,23 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // PL-Med: ten sam ekran co Ustawienia -> "Polacz z PL-Med..." (PlmedPairingFragment), otwierany tak jak
+    // podekrany ustawien (PreferenceFragmentCompat: replace w kontenerze strony + stos powrotu) - nakladka
+    // na zakladce Start, Wstecz wraca na Start
+    private fun openPlmedPairing() {
+        val fm = parentFragmentManager
+        if (fm.isStateSaved || fm.findFragmentByTag(TAG_PLMED_PAIRING) != null) return
+        val containerId = (view?.parent as? View)?.id ?: return
+        if (containerId == View.NO_ID) return
+        fm.beginTransaction()
+            .replace(containerId, PlmedPairingFragment(), TAG_PLMED_PAIRING)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    // PL-Med: po zamknieciu ekranu parowania otwartego z odsylacza HomeFragment nie przechodzi przez onResume
+    private val backStackListener = FragmentManager.OnBackStackChangedListener { syncAutostartSwitch() }
+
     // PL-Med: parowanie z PL-Med wlacza autostart (PlmedPairingService) - przelacznik na ekranie Start
     // byl ustawiany tylko przy tworzeniu widoku i po powrocie z parowania pokazywalby stary stan
     private fun syncAutostartSwitch() {
@@ -478,6 +503,10 @@ class HomeFragment : Fragment() {
         b.textPlmedStatus.text = status.problems.joinToString("\n") { "\u26A0 " + it.text }
         b.textPlmedHint.isVisible = enabled && status.ok && status.hints.isNotEmpty()
         b.textPlmedHint.text = status.hints.joinToString("\n") { "\u2139 " + it.text }
+        // PL-Med: brak kontaktu z PL-Med -> odsylacz do parowania (dotad schowanego w Ustawieniach)
+        b.textPlmedPairLink.isVisible = !BuildConfig.CLOUD_ENABLED && enabled && (
+                status.hints.any { it.code == "NOT_PAIRED" }
+                        || status.problems.any { it.code == "PLMED_SILENT" })
         val lastReq = status.lastPlmedRequestAt
         b.textPlmedContact.isVisible = enabled && status.ok && lastReq != null
         if (lastReq != null) {
@@ -541,11 +570,14 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        parentFragmentManager.removeOnBackStackChangedListener(backStackListener)
         super.onDestroyView()
         _binding = null
     }
 
     companion object {
+        private const val TAG_PLMED_PAIRING = "plmed_pairing_from_home"
+
         @JvmStatic
         fun newInstance() =
             HomeFragment()

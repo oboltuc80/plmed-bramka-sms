@@ -284,6 +284,24 @@
                 tools:text="Wlaczona optymalizacja baterii"
                 tools:visibility="visible" />
 
+            <!-- PL-Med: odsylacz do parowania pod logotypem, gdy brak kontaktu z PL-Med (NOT_PAIRED / PLMED_SILENT);
+                 kolor jak inne odsylacze aplikacji (textColorLink), podkreslenie w HomeFragment -->
+            <TextView
+                android:id="@+id/textPlmedPairLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/plmed_pair_link"
+                android:textColor="?android:attr/textColorLink"
+                android:textSize="15sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <!-- PL-Med: ostatnie polaczenie z PL-Med (szary, pod logotypem) -->
             <TextView
                 android:id="@+id/textPlmedContact"
