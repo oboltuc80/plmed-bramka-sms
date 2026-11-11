@@ -197,7 +197,10 @@ class PlmedStatusService(
                 )
             }
         }
-        if (running && lastReq == null && storage.get<Long>(PlmedPairingService.PAIRED_AT) == null) {
+        // PL-Med W9 (D-W9-8): NOT_PAIRED z tej samej zmiennej co PLMED_SILENT (local: kontakt dowolny - telefon
+        // ustawiony recznie, ktory PL-Med odpytuje przez /plmed/*, nie dostaje wskazowki; cloud bez zmian)
+        // (W5..W9-4: running && lastReq == null && PAIRED_AT == null)
+        if (isNotPaired(running, contact, storage.get<Long>(PlmedPairingService.PAIRED_AT))) {
             hint(NOT_PAIRED, context.getString(R.string.plmed_status_not_paired))
         }
         if (airplane) problem("AIRPLANE", context.getString(R.string.plmed_status_airplane))
@@ -281,6 +284,13 @@ class PlmedStatusService(
         private const val LOW_BATTERY = 15
         private const val PLMED_ROUTES = "/plmed/"
         private const val NOT_PAIRED = "NOT_PAIRED"
+
+        /**
+         * Wskazówka NOT_PAIRED: usługa działa, PL-Med nie łączył się od startu usługi ([contact] — ta sama zmienna
+         * co dla PLMED_SILENT) i telefon nigdy nie był parowany przez host ([pairedAt]). Test: PlmedNotPairedTest.
+         */
+        internal fun isNotPaired(running: Boolean, contact: Long?, pairedAt: Long?): Boolean =
+            running && contact == null && pairedAt == null
 
         /** "8 s" / "5 min" / "3 h" */
         fun formatDuration(context: Context, ms: Long): String {

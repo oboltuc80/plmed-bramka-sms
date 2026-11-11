@@ -7,4 +7,6 @@
     <!-- PL-Med W9: stan "Polaczono z PL-Med" w trybie ciemnym - jasniejsza zielen z palety (= teal_200); na tle
          #121212 kontrast 6,97:1 (#FF3E8A47 tylko 4,40:1) -->
     <color name="plmed_ok">#FF5AB060</color>
+    <!-- PL-Med W9: szare dopiski PL-Med w trybie ciemnym - na tle #121212 kontrast 6,99:1 (#FF616161 tylko 3,02:1) -->
+    <color name="plmed_caption">#FF9E9E9E</color>
 </resources>
