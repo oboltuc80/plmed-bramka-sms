@@ -265,7 +265,7 @@
     <string name="plmed_status_not_paired">Telefon nie jest jeszcze sparowany z PL-Med — Połącz z PL-Med</string>
     <string name="plmed_pair_link">Połącz z PL-Med</string>
     <string name="plmed_pair_link_sub">sparuj telefon z komputerem</string>
-    <!-- PL-Med W9: blok pod logo w stanie "polaczono" (zamiast odsylacza); %1$s = czas jak w plmed_status_plmed_ok -->
+    <!-- PL-Med W9: blok pod logo w stanie "polaczono" (zamiast odsylacza), dopisek w dwoch wierszach; %1$s = czas jak w plmed_status_plmed_ok -->
     <string name="plmed_pair_link_ok">✓ Połączono z PL-Med</string>
-    <string name="plmed_pair_link_ok_sub">telefon jest sparowany z komputerem · PL-Med łączył się %1$s temu</string>
+    <string name="plmed_pair_link_ok_sub">telefon jest sparowany z komputerem\nostatnia aktywność: %1$s temu</string>
 </resources>
