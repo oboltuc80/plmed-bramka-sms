@@ -57,9 +57,10 @@
     <string name="list_of_last_50_log_entries">List of last 50 log entries</string>
     <string name="listening_to_the_server_events">Listening to server events…</string>
     <string name="local_address">Local address</string>
-    <string name="local_server_dotdotdot">Local Server…</string>
+    <!-- upstream: Local Server… -->
+    <string name="local_server_dotdotdot">SMS gateway…</string>
     <!-- upstream: Local SMSGate notifications -->
-    <string name="local_sms_gateway_notifications">Local PL-Med Bramka SMS notifications</string>
+    <string name="local_sms_gateway_notifications">PL-Med Bramka SMS notifications</string>
     <string name="local">Local</string>
     <string name="login_code_expires">Login Code, expires %1$s</string>
     <string name="login_code">Login Code</string>
@@ -111,7 +112,8 @@
         API. Restart the app to apply changes.</string>
     <string name="settings_local_address_is" translatable="false">&lt;a href>%1$s:%2$d&lt;/a></string>
     <string name="not_available">Not available</string>
-    <string name="settings_local_server">Local server</string>
+    <!-- upstream: Local server -->
+    <string name="settings_local_server">SMS gateway</string>
     <string name="button_start_service">Start Service</string>
     <string name="button_stop_service">Stop Service</string>
     <string name="settings_public_address_is" translatable="false">&lt;a href>%1$s:%2$d&lt;/a></string>

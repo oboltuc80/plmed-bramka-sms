@@ -55,8 +55,8 @@
     <string name="list_of_last_50_log_entries">Ostatnie 50 wpisów dziennika</string>
     <string name="listening_to_the_server_events">Nasłuchiwanie zdarzeń serwera…</string>
     <string name="local_address">Adres lokalny</string>
-    <string name="local_server_dotdotdot">Serwer lokalny…</string>
-    <string name="local_sms_gateway_notifications">Powiadomienia serwera lokalnego PL-Med Bramka SMS</string>
+    <string name="local_server_dotdotdot">Bramka SMS…</string>
+    <string name="local_sms_gateway_notifications">Powiadomienia PL-Med Bramka SMS</string>
     <string name="local">Lokalny</string>
     <string name="login_code_expires">Kod logowania, wygasa %1$s</string>
     <string name="login_code">Kod logowania</string>
@@ -105,7 +105,7 @@
     <string name="settings_changed_via_api_restart_the_app_to_apply_changes">Ustawienia zmienione
         przez API. Uruchom aplikację ponownie, aby je zastosować.</string>
     <string name="not_available">Niedostępny</string>
-    <string name="settings_local_server">Serwer lokalny</string>
+    <string name="settings_local_server">Bramka SMS</string>
     <string name="button_start_service">Uruchom</string>
     <string name="button_stop_service">Zatrzymaj</string>
     <string name="settings_start_on_boot">Uruchamiaj przy starcie telefonu</string>
