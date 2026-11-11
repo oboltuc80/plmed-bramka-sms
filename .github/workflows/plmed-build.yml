@@ -148,11 +148,12 @@ jobs:
             dla systemu PL-Med w sieci lokalnej kliniki. Wersja bez trybu chmury.
 
             ### Instalacja
-            1. Pobierz plik `${{ env.APP_FILE_NAME }}-${{ steps.ver.outputs.name }}.apk` na telefon.
+            1. Pobierz plik `${{ env.APP_FILE_NAME }}-${{ steps.ver.outputs.name }}.apk` na telefon
+               albo zeskanuj kod QR w PL-Med (modul Bramka SMS).
             2. Otworz plik i zezwol na instalacje z tego zrodla (jednorazowo).
-            3. Uruchom aplikacje, nadaj uprawnienia do SMS i wylacz optymalizacje baterii.
-            4. Wlacz **Serwer lokalny**; adres, login i haslo z ekranu glownego wpisz w PL-Med
-               (Ustawienia SMS -> bramka SMSGate).
+            3. Uruchom aplikacje i nadaj uprawnienia do SMS.
+            4. W PL-Med otworz modul Bramka SMS -> Polacz telefon i zeskanuj kod QR telefonem
+               (Start -> Polacz z PL-Med albo Ustawienia -> Polacz z PL-Med...).
 
             Jesli na telefonie jest zainstalowana oryginalna aplikacja SMSGate (capcom6),
             odinstaluj ja - obie moga dzialac rownolegle, ale PL-Med ma laczyc sie z jedna.
