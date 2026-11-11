@@ -51,7 +51,7 @@ class PlmedStatusService(
 
     /**
      * Wołane przy każdym uwierzytelnionym żądaniu do serwera lokalnego ([path] — ścieżka żądania).
-     * W9-4: dotąd wołane tylko poza /plmed/* (warunek w WebService); teraz rozdział tutaj.
+     * W9-4: dotąd wołane tylko poza trasami /plmed/... (warunek w WebService); teraz rozdział tutaj.
      */
     fun noteRequest(path: String) {
         val now = System.currentTimeMillis()
