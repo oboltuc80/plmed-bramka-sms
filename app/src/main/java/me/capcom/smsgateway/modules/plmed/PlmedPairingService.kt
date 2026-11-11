@@ -36,6 +36,7 @@ class PlmedPairingService(
     private val localServerSettings: LocalServerSettings,
     private val orchestrator: OrchestratorService,
     private val settingsHelper: SettingsHelper,
+    private val statusService: PlmedStatusService,
 ) {
     class PairingException(message: String) : Exception(message)
 
@@ -154,6 +155,9 @@ class PlmedPairingService(
             }
         }
         val final = outcome ?: Outcome(false, ctx.getString(R.string.plmed_pair_no_confirm), clinic)
+        // PL-Med W9-3: "PL-Med polaczyl sie" = PL-Med dosiegnal telefonu -> kontakt z PL-Med teraz; bez tego Start
+        // po powrocie z parowania pokazalby "Polacz z PL-Med", a po 2 min PLMED_SILENT
+        if (final.ok) statusService.notePairingContact()
 
         storage.set(HOST, base)
         storage.set(PAIRED_CLINIC, clinic)

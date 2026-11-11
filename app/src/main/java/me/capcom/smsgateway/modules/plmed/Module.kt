@@ -18,6 +18,7 @@ val plmedModule = module {
             get(),
             get(),
             get(),
+            get(),  // PL-Med W9-3: PlmedStatusService - udane parowanie = kontakt z PL-Med
         )
     }
 }

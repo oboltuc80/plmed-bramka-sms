@@ -59,6 +59,14 @@ class PlmedStatusService(
         if (!path.startsWith(PLMED_ROUTES)) lastRequestAt = now
     }
 
+    /**
+     * PL-Med W9-3: udane parowanie — PL-Med potwierdził przez host, że dosięgnął telefonu (sprawdza /health:
+     * poza uwierzytelnianiem, więc bez [noteRequest]). Kontakt dowolny = teraz; roboczy bez zmian (D-3-1).
+     */
+    fun notePairingContact() {
+        lastContactAt = System.currentTimeMillis()
+    }
+
     /** Wołane przy faktycznej zmianie stanu usługi serwera lokalnego. */
     @Synchronized
     fun noteServiceState(running: Boolean) {
