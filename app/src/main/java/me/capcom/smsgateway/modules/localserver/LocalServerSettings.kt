@@ -1,6 +1,7 @@
 package me.capcom.smsgateway.modules.localserver
 
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils
+import me.capcom.smsgateway.BuildConfig
 import me.capcom.smsgateway.modules.settings.KeyValueStorage
 import me.capcom.smsgateway.modules.settings.get
 
@@ -8,7 +9,9 @@ class LocalServerSettings(
     private val storage: KeyValueStorage,
 ) {
     var enabled: Boolean
-        get() = storage.get<Boolean>(ENABLED) ?: false
+        // PL-Med: w smaku 'local' bramka (serwer lokalny) jest zawsze wlaczona - chmury nie ma, wiec wybor trybu
+        // nie ma sensu; jedyna kontrola to przycisk Uruchom/Zatrzymaj (upstream: storage.get<Boolean>(ENABLED) ?: false)
+        get() = !BuildConfig.CLOUD_ENABLED || (storage.get<Boolean>(ENABLED) ?: false)
         set(value) = storage.set(ENABLED, value)
 
     var deviceId: String?

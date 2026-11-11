@@ -139,6 +139,12 @@ class HomeFragment : Fragment() {
 
         // PL-Med: karta serwera w chmurze tylko w smaku 'cloud'
         binding.cardRemoteServer.isVisible = BuildConfig.CLOUD_ENABLED
+        // PL-Med: w smaku 'local' bez przelacznika przy karcie bramki (wylaczony tylko psul start) -
+        // karta zawsze rozwinieta, jedyna kontrola to przycisk Uruchom/Zatrzymaj
+        if (!BuildConfig.CLOUD_ENABLED) {
+            binding.switchUseLocalServer.isVisible = false
+            binding.layoutLocalServer.isVisible = true
+        }
 
         // PL-Med: odswiezanie stanu bramki pod karta co 5 s, dopoki widok zyje
         viewLifecycleOwner.lifecycleScope.launch {
@@ -349,8 +355,12 @@ class HomeFragment : Fragment() {
         super.onResume()
 
         binding.switchUseRemoteServer.isChecked = gatewaySettings.enabled
-        binding.switchUseLocalServer.isChecked = localServerSettings.enabled
-        binding.imageLogo.isVisible = localServerSettings.enabled
+        // PL-Med: w smaku 'local' przelacznika nie ma; logo pokazuje/ukrywa wylacznie refreshPlmedStatus
+        // (upstream: switchUseLocalServer.isChecked ustawiany bez warunku)
+        if (BuildConfig.CLOUD_ENABLED) {
+            binding.switchUseLocalServer.isChecked = localServerSettings.enabled
+            binding.imageLogo.isVisible = localServerSettings.enabled
+        }
     }
 
     private fun actionStart(start: Boolean) {
@@ -472,7 +482,8 @@ class HomeFragment : Fragment() {
     }
 
     // PL-Med: kolor przycisku Start/Stop: czerwony gdy usluga dziala, zielony (jak przelacznik) gdy serwer
-    // lokalny wlaczony a usluga stoi, szary gdy serwer lokalny wylaczony
+    // lokalny wlaczony a usluga stoi, szary gdy serwer lokalny wylaczony - szary tylko w smaku 'cloud',
+    // w 'local' LocalServerSettings.enabled jest zawsze true
     // (upstream: tekst + kolor red_800/grey_700 ustawiane wprost w obserwatorze stateLiveData)
     private fun updateStartButton(isRunning: Boolean) {
         val enabled = localServerSettings.enabled || gatewaySettings.enabled
