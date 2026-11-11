@@ -152,7 +152,7 @@ jobs:
                albo zeskanuj kod QR w PL-Med (modul Bramka SMS).
             2. Otworz plik i zezwol na instalacje z tego zrodla (jednorazowo).
             3. Uruchom aplikacje i nadaj uprawnienia do SMS.
-            4. W PL-Med otworz modul Bramka SMS -> Polacz telefon i zeskanuj kod QR telefonem
+            4. W PL-Med otworz modul Bramka SMS -> Parowanie telefonu i zeskanuj kod QR telefonem
                (Start -> Polacz z PL-Med albo Ustawienia -> Polacz z PL-Med...).
 
             Jesli na telefonie jest zainstalowana oryginalna aplikacja SMSGate (capcom6),
