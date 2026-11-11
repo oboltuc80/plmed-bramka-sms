@@ -4,4 +4,7 @@
          przycisk "Polacz" na ekranie parowania w trybie ciemnym - colorPrimary w values-night/themes.xml);
          #FF0A6A9B na ciemnym tle ma kontrast ok. 3:1 -->
     <color name="plmed_link">#FF7CC4E8</color>
+    <!-- PL-Med W9: stan "Polaczono z PL-Med" w trybie ciemnym - jasniejsza zielen z palety (= teal_200); na tle
+         #121212 kontrast 6,97:1 (#FF3E8A47 tylko 4,40:1) -->
+    <color name="plmed_ok">#FF5AB060</color>
 </resources>

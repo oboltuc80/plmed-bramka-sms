@@ -97,7 +97,18 @@ class PlmedStatusService(
      * z którego telefon ocenia sam siebie (smak 'local': kontakt dowolny, W9-4; 'cloud': roboczy jak dotąd).
      * [contactAt] celowo poza [PlmedStatus] — format JSON /plmed/status bez zmian.
      */
-    data class ScreenState(val status: PlmedStatus, val contactAt: Long?)
+    data class ScreenState(val status: PlmedStatus, val contactAt: Long?) {
+        /**
+         * PL-Med W9-2: stan „✓ Połączono z PL-Med” pod logo na ekranie Start (smak 'local'): brak problemów,
+         * brak wskazówki NOT_PAIRED i kontakt z PL-Med w ostatnich 2 min (W9-4; także udane parowanie, W9-3).
+         * Granica ta sama co dla PLMED_SILENT — oba stany wykluczają się. Test: PlmedScreenStateTest.
+         */
+        val connected: Boolean
+            get() = status.ok
+                    && status.hints.none { it.code == NOT_PAIRED }
+                    && contactAt != null
+                    && status.now - contactAt <= PLMED_SILENT_MS
+    }
 
     suspend fun snapshot(context: Context): PlmedStatus = screenState(context).status
 
@@ -187,7 +198,7 @@ class PlmedStatusService(
             }
         }
         if (running && lastReq == null && storage.get<Long>(PlmedPairingService.PAIRED_AT) == null) {
-            hint("NOT_PAIRED", context.getString(R.string.plmed_status_not_paired))
+            hint(NOT_PAIRED, context.getString(R.string.plmed_status_not_paired))
         }
         if (airplane) problem("AIRPLANE", context.getString(R.string.plmed_status_airplane))
         if (!simReady) problem("NO_SIM", context.getString(R.string.plmed_status_no_sim))
@@ -269,6 +280,7 @@ class PlmedStatusService(
         private const val PLMED_SILENT_MS = 2L * 60L * 1000L
         private const val LOW_BATTERY = 15
         private const val PLMED_ROUTES = "/plmed/"
+        private const val NOT_PAIRED = "NOT_PAIRED"
 
         /** "8 s" / "5 min" / "3 h" */
         fun formatDuration(context: Context, ms: Long): String {

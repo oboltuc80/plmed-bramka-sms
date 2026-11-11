@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -151,10 +152,10 @@ class HomeFragment : Fragment() {
             binding.labelPublicIP.isVisible = false
             binding.textPublicIP.isVisible = false
             // PL-Med: odsylacz "Polacz z PL-Med" (z dopiskiem) pod logo / pod komunikatem stanu - W8: zawsze
-            // widoczny, ponowne parowanie pod reka (W7: tylko przy NOT_PAIRED / PLMED_SILENT, w refreshPlmedStatus)
+            // widoczny, ponowne parowanie pod reka (W7: tylko przy NOT_PAIRED / PLMED_SILENT, w refreshPlmedStatus).
+            // W9: gdy wszystko dziala, ten sam blok pokazuje "Polaczono z PL-Med" (zielone, refreshPlmedStatus)
             binding.layoutPlmedPairLink.isVisible = true
-            binding.textPlmedPairLink.paintFlags =
-                binding.textPlmedPairLink.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            showPlmedPairLink(connected = false, contactText = null)
             binding.layoutPlmedPairLink.setOnClickListener { openPlmedPairing() }
             parentFragmentManager.addOnBackStackChangedListener(backStackListener)
         }
@@ -493,11 +494,12 @@ class HomeFragment : Fragment() {
     // PL-Med: stan pod karta — logotyp gdy wszystko gra, inaczej czerwona lista problemow
     private suspend fun refreshPlmedStatus() {
         val ctx = context ?: return
-        val status = try {
-            plmedStatus.snapshot(ctx.applicationContext)
+        val state = try {
+            plmedStatus.screenState(ctx.applicationContext)
         } catch (e: Throwable) {
             return
         }
+        val status = state.status
         val b = _binding ?: return
         val enabled = localServerSettings.enabled
         b.imageLogo.isVisible = enabled && status.ok
@@ -505,13 +507,17 @@ class HomeFragment : Fragment() {
         b.textPlmedStatus.text = status.problems.joinToString("\n") { "\u26A0 " + it.text }
         b.textPlmedHint.isVisible = enabled && status.ok && status.hints.isNotEmpty()
         b.textPlmedHint.text = status.hints.joinToString("\n") { "\u2139 " + it.text }
-        val lastReq = status.lastPlmedRequestAt
-        b.textPlmedContact.isVisible = enabled && status.ok && lastReq != null
-        if (lastReq != null) {
-            b.textPlmedContact.text = getString(
-                R.string.plmed_status_plmed_ok,
-                PlmedStatusService.formatDuration(ctx, status.now - lastReq)
-            )
+        // PL-Med W9: czas kontaktu z PL-Med z kontaktu do oceny telefonu (W9-4: w 'local' dowolny); w stanie
+        // "polaczono" jest w dopisku pod "Polaczono z PL-Med" - osobna linia znika (inaczej trzy linie o tym samym)
+        // (W8: b.textPlmedContact.isVisible = enabled && status.ok && lastPlmedRequestAt != null)
+        val connected = !BuildConfig.CLOUD_ENABLED && enabled && state.connected
+        val duration = state.contactAt?.let { PlmedStatusService.formatDuration(ctx, status.now - it) }
+        b.textPlmedContact.isVisible = enabled && status.ok && !connected && duration != null
+        if (duration != null) {
+            b.textPlmedContact.text = getString(R.string.plmed_status_plmed_ok, duration)
+        }
+        if (!BuildConfig.CLOUD_ENABLED) {
+            showPlmedPairLink(connected, duration?.let { getString(R.string.plmed_pair_link_ok_sub, it) })
         }
         val parts = mutableListOf<String>()
         status.lastStartedAt?.let {
@@ -521,6 +527,27 @@ class HomeFragment : Fragment() {
             parts += getString(R.string.plmed_stopped_at, PlmedStatusService.formatMoment(ctx, it))
         }
         b.textServiceStateTime.text = parts.joinToString("  \u00B7  ")
+    }
+
+    // PL-Med W9: blok pod logo - dwa stany, ten sam obszar dotyku (min. 48 dp) i to samo klikniecie (parowanie):
+    //  - "polaczono" (PlmedStatusService.ScreenState.connected): zielone pogrubione plmed_pair_link_ok (ze znakiem
+    //    odhaczenia) bez podkreslenia, pod nim szary dopisek plmed_pair_link_ok_sub z czasem kontaktu [contactText],
+    //  - kazdy inny: niebieski podkreslony odsylacz "Polacz z PL-Med" + "sparuj telefon z komputerem" (W8)
+    private fun showPlmedPairLink(connected: Boolean, contactText: String?) {
+        val b = _binding ?: return
+        val ctx = context ?: return
+        val link = b.textPlmedPairLink
+        val sub = contactText?.takeIf { connected }
+        val ok = sub != null
+        link.setText(if (ok) R.string.plmed_pair_link_ok else R.string.plmed_pair_link)
+        link.setTextColor(ContextCompat.getColor(ctx, if (ok) R.color.plmed_ok else R.color.plmed_link))
+        link.setTypeface(null, if (ok) Typeface.BOLD else Typeface.NORMAL)
+        link.paintFlags = if (ok) {
+            link.paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv()
+        } else {
+            link.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        }
+        b.textPlmedPairLinkSub.text = sub ?: getString(R.string.plmed_pair_link_sub)
     }
 
     // PL-Med: kolor przycisku Start/Stop: czerwony gdy usluga dziala, zielony (jak przelacznik) gdy serwer

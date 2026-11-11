@@ -15,4 +15,7 @@
     <!-- PL-Med W8: odsylacz "Polacz z PL-Med" na ekranie Start - niebieski z logotypu (= purple_500, przycisk
          "Polacz" na ekranie parowania); osobny zasob, nie textColorLink -->
     <color name="plmed_link">#FF0A6A9B</color>
+    <!-- PL-Med W9: stan "Polaczono z PL-Med" na ekranie Start - ciemna zielen z logotypu (= teal_700, akcent modulu
+         PL-Med); na bialym tle 4,26:1, dlatego tekst pogrubiony -->
+    <color name="plmed_ok">#FF3E8A47</color>
 </resources>

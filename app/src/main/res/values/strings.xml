@@ -280,4 +280,7 @@
     <string name="plmed_status_not_paired">Phone not paired with PL-Med yet — Connect with PL-Med</string>
     <string name="plmed_pair_link">Connect with PL-Med</string>
     <string name="plmed_pair_link_sub">pair this phone with the computer</string>
+    <!-- PL-Med W9: block below the logo when connected (instead of the link); %1$s = time as in plmed_status_plmed_ok -->
+    <string name="plmed_pair_link_ok">✓ Connected to PL-Med</string>
+    <string name="plmed_pair_link_ok_sub">this phone is paired with the computer · PL-Med contacted it %1$s ago</string>
 </resources>

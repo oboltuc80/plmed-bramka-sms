@@ -300,7 +300,9 @@
 
             <!-- PL-Med: odsylacz do parowania pod logotypem / pod czerwonym komunikatem stanu. W8: zawsze widoczny
                  w smaku 'local' (W7: tylko przy NOT_PAIRED / PLMED_SILENT), niebieski z logotypu (plmed_link; W7:
-                 textColorLink), pod nim szary dopisek; caly blok klikalny (min. 48 dp), podkreslenie w HomeFragment -->
+                 textColorLink), pod nim szary dopisek; caly blok klikalny (min. 48 dp), podkreslenie w HomeFragment.
+                 W9: gdy wszystko dziala, ten sam blok w stanie "polaczono" - zielony, bez podkreslenia, z czasem
+                 kontaktu w dopisku (HomeFragment.showPlmedPairLink) -->
             <LinearLayout
                 android:id="@+id/layoutPlmedPairLink"
                 android:layout_width="wrap_content"
