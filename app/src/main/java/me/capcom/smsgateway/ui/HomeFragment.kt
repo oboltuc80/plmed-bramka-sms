@@ -363,6 +363,18 @@ class HomeFragment : Fragment() {
         if (BuildConfig.CLOUD_ENABLED) {
             binding.switchUseLocalServer.isChecked = localServerSettings.enabled
             binding.imageLogo.isVisible = localServerSettings.enabled
+        } else {
+            syncAutostartSwitch()
+        }
+    }
+
+    // PL-Med: parowanie z PL-Med wlacza autostart (PlmedPairingService) - przelacznik na ekranie Start
+    // byl ustawiany tylko przy tworzeniu widoku i po powrocie z parowania pokazywalby stary stan
+    private fun syncAutostartSwitch() {
+        val b = _binding ?: return
+        val autostart = settingsHelper.autostart
+        if (b.switchAutostart.isChecked != autostart) {
+            b.switchAutostart.isChecked = autostart
         }
     }
 

@@ -17,6 +17,7 @@ val plmedModule = module {
             PreferencesStorage(get(), "plmed"),
             get(),
             get(),
+            get(),
         )
     }
 }

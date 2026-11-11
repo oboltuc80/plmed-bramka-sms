@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import me.capcom.smsgateway.BuildConfig
 import me.capcom.smsgateway.R
+import me.capcom.smsgateway.helpers.SettingsHelper
 import me.capcom.smsgateway.modules.localserver.LocalServerSettings
 import me.capcom.smsgateway.modules.localserver.WebService
 import me.capcom.smsgateway.modules.orchestrator.OrchestratorService
@@ -35,6 +36,7 @@ class PlmedPairingService(
     private val storage: KeyValueStorage,
     private val localServerSettings: LocalServerSettings,
     private val orchestrator: OrchestratorService,
+    private val settingsHelper: SettingsHelper,
 ) {
     class PairingException(message: String) : Exception(message)
 
@@ -111,6 +113,12 @@ class PlmedPairingService(
         step(ctx.getString(R.string.plmed_pair_step_apply))
         localServerSettings.applyPairing(password, port)
         localServerSettings.enabled = true
+        // telefon przyjal ustawienia z PL-Med -> bramka ma wstawac sama po restarcie telefonu
+        // (aktualizacja, rozladowanie); takze gdy PL-Med potem zglosi blad ("Zapisz mimo to").
+        // Przelacznik na ekranie Start zostaje - mozna wylaczyc. Setter wlacza tez BootReceiver.
+        if (!BuildConfig.CLOUD_ENABLED) {
+            settingsHelper.autostart = true
+        }
         restartServices(ctx, port)
 
         val ip = try {
