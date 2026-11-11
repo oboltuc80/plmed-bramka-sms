@@ -1,7 +1,6 @@
 package me.capcom.smsgateway.modules.plmed
 
 import android.content.Context
-import android.net.Uri
 import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -65,26 +64,11 @@ class PlmedPairingService(
      * Przyjmuje kod ("RSV-APW", "rsvapw") albo adres z kodu QR
      * ("https://hub.pl-med.pl/bramka-sms/pair/RSVAPW"). Zwraca (baza, kod) albo null.
      * Z QR przyjmujemy tylko https i hosty PL-Med — obcy kod QR nie może przestawić bramki.
+     * BOM i znaki niewidoczne (stare EXE PL-Med dokładały BOM do kodu QR) są pomijane.
+     * Rozbiór: [PlmedPairingInput] (czysty JVM, test PlmedPairingInputTest).
      */
-    fun parseInput(raw: String): Pair<String, String>? {
-        val text = raw.trim()
-        var base = storage.get<String>(HOST) ?: DEFAULT_HOST
-        var codePart = text
-        if (text.contains("://")) {
-            val uri = Uri.parse(text)
-            val host = uri.host?.lowercase() ?: return null
-            if (uri.scheme != "https") return null
-            if (host != ALLOWED_HOST && !host.endsWith(".$ALLOWED_HOST")) return null
-            val path = uri.path ?: return null
-            val idx = path.indexOf("/pair/")
-            if (idx < 0) return null
-            base = "https://$host" + path.substring(0, idx)
-            codePart = path.substring(idx + "/pair/".length)
-        }
-        val code = codePart.uppercase().filter { it in CODE_ALPHABET }
-        if (code.length != CODE_LENGTH) return null
-        return base to code
-    }
+    fun parseInput(raw: String): Pair<String, String>? =
+        PlmedPairingInput.parse(raw, storage.get<String>(HOST) ?: DEFAULT_HOST)
 
     suspend fun pair(
         context: Context,
@@ -240,7 +224,6 @@ class PlmedPairingService(
 
     companion object {
         const val DEFAULT_HOST = "https://hub.pl-med.pl/bramka-sms"
-        private const val ALLOWED_HOST = "pl-med.pl"
         const val CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
         const val CODE_LENGTH = 6
         private const val RESULT_TIMEOUT_MS = 120_000L
