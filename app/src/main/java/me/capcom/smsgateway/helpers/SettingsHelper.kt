@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import me.capcom.smsgateway.BuildConfig
 import me.capcom.smsgateway.receivers.BootReceiver
 import java.util.Locale
 
@@ -16,7 +17,11 @@ class SettingsHelper(private val context: Context) {
     }
 
     var autostart: Boolean
-        get() = settings.getBoolean(PREF_KEY_AUTOSTART, false)
+        // PL-Med W8: w smaku 'local' domyslnie wlaczone - bramka wstaje sama po restarcie telefonu i po
+        // aktualizacji aplikacji (BootReceiver: BOOT_COMPLETED, MY_PACKAGE_REPLACED); jawne wylaczenie
+        // przez uzytkownika (klucz zapisany jako false) zostaje uszanowane
+        // (upstream: settings.getBoolean(PREF_KEY_AUTOSTART, false))
+        get() = settings.getBoolean(PREF_KEY_AUTOSTART, !BuildConfig.CLOUD_ENABLED)
         set(value) {
             // enable broadcast receiver
             context.packageManager.setComponentEnabledSetting(
