@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PL-Med W8: w trybie ciemnym odsylacz "Polacz z PL-Med" jasnoniebieski z logotypu (= purple_200, jak
+         przycisk "Polacz" na ekranie parowania w trybie ciemnym - colorPrimary w values-night/themes.xml);
+         #FF0A6A9B na ciemnym tle ma kontrast ok. 3:1 -->
+    <color name="plmed_link">#FF7CC4E8</color>
+</resources>

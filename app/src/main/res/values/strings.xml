@@ -271,6 +271,7 @@
     <string name="plmed_pair_err_no_ip">The phone has no Wi-Fi address — turn on Wi-Fi (same network as the computer) and try again</string>
     <string name="plmed_pair_err_service">The gateway service did not start — check the Home tab</string>
     <string name="plmed_pair_privacy">Only gateway settings (password, port, addresses) pass through the PL-Med server. Text messages and phone numbers never do.</string>
-    <string name="plmed_status_not_paired">Phone not connected with PL-Med yet — Settings → Connect with PL-Med</string>
+    <string name="plmed_status_not_paired">Phone not paired with PL-Med yet — Connect with PL-Med</string>
     <string name="plmed_pair_link">Connect with PL-Med</string>
+    <string name="plmed_pair_link_sub">pair this phone with the computer</string>
 </resources>

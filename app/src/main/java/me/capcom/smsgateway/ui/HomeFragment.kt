@@ -150,10 +150,12 @@ class HomeFragment : Fragment() {
             // PL-Med: w sieci kliniki adres publiczny jest zawsze "Niedostepny" - recepcja czytala to jako awarie
             binding.labelPublicIP.isVisible = false
             binding.textPublicIP.isVisible = false
-            // PL-Med: odsylacz "Polacz z PL-Med" pod logo (widocznosc w refreshPlmedStatus)
+            // PL-Med: odsylacz "Polacz z PL-Med" (z dopiskiem) pod logo / pod komunikatem stanu - W8: zawsze
+            // widoczny, ponowne parowanie pod reka (W7: tylko przy NOT_PAIRED / PLMED_SILENT, w refreshPlmedStatus)
+            binding.layoutPlmedPairLink.isVisible = true
             binding.textPlmedPairLink.paintFlags =
                 binding.textPlmedPairLink.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            binding.textPlmedPairLink.setOnClickListener { openPlmedPairing() }
+            binding.layoutPlmedPairLink.setOnClickListener { openPlmedPairing() }
             parentFragmentManager.addOnBackStackChangedListener(backStackListener)
         }
 
@@ -503,10 +505,6 @@ class HomeFragment : Fragment() {
         b.textPlmedStatus.text = status.problems.joinToString("\n") { "\u26A0 " + it.text }
         b.textPlmedHint.isVisible = enabled && status.ok && status.hints.isNotEmpty()
         b.textPlmedHint.text = status.hints.joinToString("\n") { "\u2139 " + it.text }
-        // PL-Med: brak kontaktu z PL-Med -> odsylacz do parowania (dotad schowanego w Ustawieniach)
-        b.textPlmedPairLink.isVisible = !BuildConfig.CLOUD_ENABLED && enabled && (
-                status.hints.any { it.code == "NOT_PAIRED" }
-                        || status.problems.any { it.code == "PLMED_SILENT" })
         val lastReq = status.lastPlmedRequestAt
         b.textPlmedContact.isVisible = enabled && status.ok && lastReq != null
         if (lastReq != null) {

@@ -12,4 +12,7 @@
     <color name="teal_700">#FF3E8A47</color>
     <color name="white">#FFFFFFFF</color>
     <color name="plmed_hint">#FFB26A00</color>
+    <!-- PL-Med W8: odsylacz "Polacz z PL-Med" na ekranie Start - niebieski z logotypu (= purple_500, przycisk
+         "Polacz" na ekranie parowania); osobny zasob, nie textColorLink -->
+    <color name="plmed_link">#FF0A6A9B</color>
 </resources>
