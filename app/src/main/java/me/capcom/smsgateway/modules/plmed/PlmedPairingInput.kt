@@ -15,7 +15,7 @@ internal object PlmedPairingInput {
      * BOM i znaki niewidoczne usuwane przed analizą. PL-Med do 2026-11-10 dokładał BOM
      * na początku kodu QR (błąd generatora, poprawiony w PL-Med; stare EXE u klientów mogą zostać).
      */
-    private val INVISIBLE = setOf('﻿', '​', '‌', '‍', '⁠')
+    private val INVISIBLE = setOf('\uFEFF', '\u200B', '\u200C', '\u200D', '\u2060')
 
     fun clean(raw: String): String = raw.filterNot { it in INVISIBLE }.trim()
 
